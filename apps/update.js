@@ -34,6 +34,7 @@ app.reg({
   fnc: 'update',
   async update () {
     if (!this.e.isMaster) return false
+    this.reply('正在更新，请稍后...', { at: true })
     const name = this.e.msg.replace(/#更新/, '').trim()
     const up = new Update()
     const res = await up.update(name, 'git pull')

@@ -43,9 +43,11 @@ app.cron({
 })
 
 app.reg({
-  reg: /#状态$/,
+  reg: /^#状态$/,
   fnc: 'status',
   async status () {
+    // console.log
+    this.reply('正在统计中，请稍后...')
     const all = [
       '------机器人状态------',
       `Karin 版本：v${Cfg.package.version}`,
@@ -81,6 +83,7 @@ app.reg({
   async getCount (key) {
     let num = 0
     /** 对于30天的统计，预先生成所有可能的键 */
+    // eslint-disable-next-line no-unused-vars
     const keys = Array.from({ length: 30 }, (_, i) => {
       const date = moment().subtract(i, 'days').format('YYYY-MM-DD')
       return `${key}:${date}`
