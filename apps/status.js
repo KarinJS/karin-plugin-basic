@@ -32,8 +32,7 @@ init()
 
 const app = App.init({
   name: '状态统计',
-  dsc: '统计机器人收发消息数量，插件触发数量等',
-  priority: -1
+  dsc: '统计机器人收发消息数量，插件触发数量等'
 })
 
 app.cron({
