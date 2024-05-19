@@ -46,8 +46,6 @@ app.reg({
   reg: /^#状态$/,
   fnc: 'status',
   async status () {
-    // console.log
-    this.reply('正在统计中，请稍后...')
     const all = [
       '------机器人状态------',
       `Karin 版本：v${Cfg.package.version}`,
