@@ -1,5 +1,6 @@
-import { Update, common, plugin, segment } from '#Karin'
+import fs from 'fs'
 import Config from '../lib/config.js'
+import { Update, common, plugin, segment } from '#Karin'
 
 const List = []
 export class update extends plugin {
@@ -71,7 +72,9 @@ export class update extends plugin {
       name = List[index]
       _path = _path + `/plugins/${List[index]}`
     } else if (name) {
-      _path += `/plugins/${name}`
+      const filePath = this.pluginName(name)
+      if (!filePath) return true
+      _path = filePath
     } else {
       name = 'Karin'
     }
@@ -103,7 +106,9 @@ export class update extends plugin {
       name = List[index]
       _path = _path + `/plugins/${List[index]}`
     } else if (name) {
-      _path += `/plugins/${name}`
+      const filePath = this.pluginName(name)
+      if (!filePath) return true
+      _path = filePath
     } else {
       name = 'Karin'
     }
@@ -130,7 +135,9 @@ export class update extends plugin {
       name = List[index]
       _path = _path + `/plugins/${List[index]}`
     } else if (name) {
-      _path += `/plugins/${name}`
+      const filePath = this.pluginName(name)
+      if (!filePath) return true
+      _path = filePath
     } else {
       name = 'karin'
     }
@@ -145,6 +152,9 @@ export class update extends plugin {
     }
   }
 
+  /**
+   * 全部更新
+   */
   async updateAll () {
     this.e.reply('正在进行全部更新，请稍后...', { at: true })
     const msg = []
@@ -178,5 +188,17 @@ export class update extends plugin {
       return this.replyForward(makeForward)
     }
     return this.reply(`\n全部更新完成：\n${msg.join('\n\n')}`, { at: true })
+  }
+
+  pluginName (name) {
+    const _path = process.cwd()
+    let filePath = `${_path}/plugins/karin-plugin-${name}`
+    if (fs.existsSync(filePath)) return filePath
+
+    filePath = `${_path}/plugins/karin-adapter-${name}`
+    if (fs.existsSync(filePath)) return filePath
+
+    this.e.reply('未找到该插件', { at: true })
+    return false
   }
 }
