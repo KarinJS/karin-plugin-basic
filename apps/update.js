@@ -77,8 +77,8 @@ export class update extends plugin {
     }
 
     try {
-      const { data, count } = await Update.checkUpdate(_path)
-      return this.e.reply(`\n${name} 检查结果\n落后：${count}次提交\n${data}`, { at: true })
+      const { data, count = 0 } = await Update.checkUpdate(_path)
+      return this.e.reply(`\n检查结果\n检查目标：${name.replace(/^karin-(plugin|adapter)-/g, '')}\n落后：${count}次提交\n${data || '已经是最新版本'}`, { at: true })
     } catch (error) {
       return this.e.reply(`\n检查更新失败：\n${error.message}`, { at: true })
     }
@@ -139,7 +139,7 @@ export class update extends plugin {
     if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --rebase --allow-unrelated-histories'
     try {
       const { data } = await Update.update(_path, cmd)
-      return this.reply(`\n${name}${data}`)
+      return this.reply(`\n${name}${data}`, { at: true })
     } catch (error) {
       return this.reply(`更新失败：${error.message}`, { at: true })
     }
