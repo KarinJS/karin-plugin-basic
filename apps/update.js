@@ -26,7 +26,7 @@ export class update extends plugin {
           permission: 'master'
         },
         {
-          reg: /^#(强制)?更新(?!列表|日志)/,
+          reg: /^#(强制)?更新(插件)?(?!列表|日志)/,
           fnc: 'update',
           permission: 'master'
         },
@@ -128,7 +128,7 @@ export class update extends plugin {
     this.e.reply('正在更新，请稍后...', { at: true })
 
     let _path = process.cwd()
-    let name = this.e.msg.replace(/^#(强制)?更新(?!列表|日志)/, '').trim()
+    let name = this.e.msg.replace(/^#(强制)?更新(插件)?(?!列表|日志)/, '').trim()
     if (Number(name)) {
       if (!List.length) await this.updateList(this.e, false)
       const index = Number(name) - 1
