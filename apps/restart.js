@@ -30,6 +30,14 @@ export class Restart extends plugin {
 
   async restart () {
     await this.reply(`\n开始重启 本次运行时间：${Karin.uptime}`, { at: true })
+    try {
+      await this.CmdRestart()
+    } catch (error) {
+      return this.reply(`\n重启失败\n${error.message}`, { at: true })
+    }
+  }
+
+  async CmdRestart () {
     const options = {
       id: this.e.self_id,
       contact: this.e.contact,
@@ -41,15 +49,11 @@ export class Restart extends plugin {
     const EX = 5 * 60
     await redis.set(key, JSON.stringify(options), { EX })
 
-    try {
-      if (Config.pm2.enable) {
-        await exec(Config.pm2.cmd)
-        process.exit()
-      } else {
-        return await this.CmdStop()
-      }
-    } catch (error) {
-      return this.reply(`\n重启失败\n${error.message}`, { at: true })
+    if (Config.pm2.enable) {
+      await exec(Config.pm2.cmd)
+      process.exit()
+    } else {
+      return await this.CmdStop()
     }
   }
 

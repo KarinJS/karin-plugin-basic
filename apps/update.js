@@ -1,6 +1,8 @@
 import fs from 'fs'
 import Config from '../lib/config.js'
+import { Restart } from './restart.js'
 import { Update, common, plugin, segment } from '#Karin'
+import Karin from '../../../lib/init/index.js'
 
 const List = []
 export class update extends plugin {
@@ -142,11 +144,25 @@ export class update extends plugin {
       name = 'karin'
     }
 
-    let cmd = 'git pull --rebase'
-    if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --rebase --allow-unrelated-histories'
+    let cmd = 'git pull'
+    if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
     try {
       const { data } = await Update.update(_path, cmd)
-      return this.reply(`\n${name}${data}`, { at: true })
+      await this.reply(`\n${name}${data}`, { at: true })
+
+      if (!data.includes('更新成功')) return true
+
+      if (Config.Config.restart) {
+        await this.reply(`\n更新完成，开始重启 本次运行时间：${Karin.uptime}`, { at: true })
+        try {
+          const restart = new Restart()
+          restart.e = this.e
+          await restart.CmdRestart()
+          return true
+        } catch (error) {
+          return this.reply(`\n重启失败\n${error.message}`, { at: true })
+        }
+      }
     } catch (error) {
       return this.reply(`更新失败：${error.message}`, { at: true })
     }
@@ -159,8 +175,8 @@ export class update extends plugin {
     this.e.reply('正在进行全部更新，请稍后...', { at: true })
     const msg = []
     let list = Update.getPlugins()
-    let cmd = 'git pull --rebase'
-    if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --rebase --allow-unrelated-histories'
+    let cmd = 'git pull'
+    if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
 
     try {
       const { data } = await Update.update(process.cwd(), cmd)
@@ -169,12 +185,14 @@ export class update extends plugin {
       msg.push(`Karin：${error.message}`)
     }
 
+    let isRestart = false
     const promises = list.map(async name => {
       /** 拼接路径 */
       const item = process.cwd() + `/plugins/${name}`
       try {
         const { data } = await Update.update(item, cmd)
         msg.push(`${name}：${data}`)
+        if (!isRestart && data.includes('更新成功')) isRestart = true
       } catch (error) {
         msg.push(`${name}：${error.message}`)
       }
@@ -184,10 +202,28 @@ export class update extends plugin {
 
     if (Config.Config.forward) {
       const elements = msg.map(i => segment.text(i))
-      const makeForward = common.makeForward(elements)
-      return this.replyForward(makeForward)
+      const makeForward = common.makeForward(elements, this.e.user_id, this.e.sender.nick)
+      await this.replyForward(makeForward)
+    } else {
+      await this.reply(`\n全部更新完成：\n${msg.join('\n\n')}`, { at: true })
     }
-    return this.reply(`\n全部更新完成：\n${msg.join('\n\n')}`, { at: true })
+
+    if (!isRestart) return true
+
+    if (Config.Config.restart) {
+      await this.reply(`\n更新完成，开始重启 本次运行时间：${Karin.uptime}`, { at: true })
+      try {
+        const restart = new Restart()
+        restart.e = this.e
+        await restart.CmdRestart()
+        return true
+      } catch (error) {
+        return this.reply(`\n重启失败\n${error.message}`, { at: true })
+      }
+    }
+
+    // 已关闭自动重启
+    return this.reply('\n已关闭自动重启，请自行重启使更新生效~', { at: true })
   }
 
   pluginName (name) {

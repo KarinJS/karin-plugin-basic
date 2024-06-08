@@ -10,3 +10,6 @@ pm2:
   enable: true
   # 调用pm2指令 如使用不同的包管理器请自行修改
   cmd: pnpm start
+
+# 更新完成是否自动重启
+restart: true
