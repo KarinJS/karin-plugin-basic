@@ -18,7 +18,7 @@ const count = ref({
   "month_recv_count": []
 })
 
-request.post(`${props.apiUrl}/system/GetKarinStatusCount`)
+request.get(`${props.apiUrl}/system/plugins/karin-plugin-basic/GetKarinStatusCount`)
   .then((response) => {
     if (response.data.status === 'success') {
       count.value = response.data.data
