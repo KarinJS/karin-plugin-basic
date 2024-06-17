@@ -1,6 +1,5 @@
 import Config from '../lib/config.js'
-import { plugin, redis, exec } from '#Karin'
-import Karin from '../../../lib/init/index.js'
+import { plugin, redis, exec, common } from '#Karin'
 
 export class Restart extends plugin {
   constructor () {
@@ -24,12 +23,12 @@ export class Restart extends plugin {
   }
 
   async stop () {
-    await this.reply(`\nKarin 已停止运行 运行时间：${Karin.uptime}`, { at: true })
+    await this.reply(`\nKarin 已停止运行 运行时间：${common.uptime()}`, { at: true })
     return await this.CmdStop()
   }
 
   async restart () {
-    await this.reply(`\n开始重启 本次运行时间：${Karin.uptime}`, { at: true })
+    await this.reply(`\n开始重启 本次运行时间：${common.uptime()}`, { at: true })
     try {
       await this.CmdRestart()
     } catch (error) {

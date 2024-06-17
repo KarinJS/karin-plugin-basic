@@ -2,7 +2,6 @@ import fs from 'fs'
 import Config from '../lib/config.js'
 import { Restart } from './restart.js'
 import { Update, common, plugin, segment } from '#Karin'
-import Karin from '../../../lib/init/index.js'
 
 const List = []
 export class update extends plugin {
@@ -15,33 +14,32 @@ export class update extends plugin {
         {
           reg: /^#插件列表$/,
           fnc: 'updateList',
-          permission: 'master'
+          permission: 'master',
         },
         {
           reg: /^#检查更新/,
           fnc: 'checkUpdate',
-          permission: 'master'
+          permission: 'master',
         },
         {
           reg: /^#更新日志/,
           fnc: 'log',
-          permission: 'master'
+          permission: 'master',
         },
         {
           reg: /^#(强制)?更新(插件)?(?!列表|日志)/,
           fnc: 'update',
-          permission: 'master'
+          permission: 'master',
         },
         {
           reg: /^#全部(强制)?更新$/,
           fnc: 'updateAll',
-          permission: 'master'
-        }
-      ]
+          permission: 'master',
+        },
+      ],
     })
   }
 
-  // eslint-disable-next-line no-unused-vars
   async updateList (_e, isReply = true) {
     const list = Update.getPlugins()
     /** 清空List */
@@ -56,7 +54,7 @@ export class update extends plugin {
       '更新：#更新插件 序号',
       '检查更新：#检查更新 序号',
       '日志：#更新日志 条数 序号',
-      res
+      res,
     ].join('\n'), { at: true })
     return true
   }
@@ -153,7 +151,7 @@ export class update extends plugin {
       if (!data.includes('更新成功')) return true
 
       if (Config.Config.restart) {
-        await this.reply(`\n更新完成，开始重启 本次运行时间：${Karin.uptime}`, { at: true })
+        await this.reply(`\n更新完成，开始重启 本次运行时间：${common.uptime()}`, { at: true })
         try {
           const restart = new Restart()
           restart.e = this.e
@@ -174,7 +172,7 @@ export class update extends plugin {
   async updateAll () {
     this.e.reply('正在进行全部更新，请稍后...', { at: true })
     const msg = []
-    let list = Update.getPlugins()
+    const list = Update.getPlugins()
     let cmd = 'git pull'
     if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
 
@@ -211,7 +209,7 @@ export class update extends plugin {
     if (!isRestart) return true
 
     if (Config.Config.restart) {
-      await this.reply(`\n更新完成，开始重启 本次运行时间：${Karin.uptime}`, { at: true })
+      await this.reply(`\n更新完成，开始重启 本次运行时间：${common.uptime()}`, { at: true })
       try {
         const restart = new Restart()
         restart.e = this.e
