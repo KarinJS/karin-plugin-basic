@@ -1,5 +1,5 @@
 import Config from '../lib/config.js'
-import { plugin, redis, exec, common } from '#Karin'
+import { plugin, level, exec, common } from '#Karin'
 
 export class Restart extends plugin {
   constructor () {
@@ -11,14 +11,14 @@ export class Restart extends plugin {
         {
           reg: /^#关机$/,
           fnc: 'stop',
-          permission: 'master'
+          permission: 'master',
         },
         {
           reg: /^#重启$/,
           fnc: 'restart',
-          permission: 'master'
-        }
-      ]
+          permission: 'master',
+        },
+      ],
     })
   }
 
@@ -41,12 +41,10 @@ export class Restart extends plugin {
       id: this.e.self_id,
       contact: this.e.contact,
       time: Date.now(),
-      message_id: this.e.message_id
+      message_id: this.e.message_id,
     }
     const key = `karin:restart:${options.id}`
-    // 5分钟有效期
-    const EX = 5 * 60
-    await redis.set(key, JSON.stringify(options), { EX })
+    await level.put(key, options)
 
     if (Config.pm2.enable) {
       await exec(Config.pm2.cmd)
