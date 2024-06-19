@@ -11,49 +11,60 @@ const props = defineProps({
 const request = props.request
 
 const updateList = ref([])
+const loading = ref(false)
+const loadingPull = ref(false)
 
 const checkUpdate = () => {
+  loading.value = true
   request.get(`${props.apiUrl}/system/plugins/karin-plugin-basic/checkUpdate`)
-  .then((response) => {
-    if (response.data.status === 'success') {
-      updateList.value = response.data.data
-    } else {
+    .then((response) => {
+      if (response.data.status === 'success') {
+        updateList.value = response.data.data
+      } else {
+        updateList.value = []
+      }
+      loading.value = false
+    })
+    .catch((error) => {
       updateList.value = []
-    }
-  })
-  .catch((error) => {
-    updateList.value = []
-  })
+      loading.value = false
+    })
 }
 
 const pull = () => {
+  loadingPull.value = true
   request.post(`${props.apiUrl}/system/plugins/karin-plugin-basic/update`, { force: false })
-  .then((response) => {
-    if (response.data.status === 'success') {
-      checkUpdate()
-      props.snackbar.open('更新成功')
-    } else {
-      props.snackbar.open('更新失败', 'error')
-    }
-  })
-  .catch((error) => {
-    props.snackbar.open('接口错误', 'error')
-  })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        checkUpdate()
+        props.snackbar.open('更新成功')
+      } else {
+        props.snackbar.open('更新失败', 'error')
+      }
+      loadingPull.value = false
+    })
+    .catch((error) => {
+      props.snackbar.open('接口错误', 'error')
+      loadingPull.value = false
+    })
 }
 
 const pullForce = () => {
+  loadingPull.value = true
   request.post(`${props.apiUrl}/system/plugins/karin-plugin-basic/update`, { force: true })
-  .then((response) => {
-    if (response.data.status === 'success') {
-      checkUpdate()
-      props.snackbar.open('更新成功')
-    } else {
-      props.snackbar.open('更新失败', 'error')
-    }
-  })
-  .catch((error) => {
-    props.snackbar.open('接口错误', 'error')
-  })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        checkUpdate()
+        props.snackbar.open('更新成功')
+      } else {
+        props.snackbar.open('更新失败', 'error')
+      }
+      loadingPull.value = false
+    })
+    .catch((error) => {
+      props.snackbar.open('接口错误', 'error')
+      loadingPull.value = false
+    })
 }
 
 onMounted(() => {
@@ -63,7 +74,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-card elevation="0" class="overflow-hidden brown-lighten-shape brown-lighten-secondary-shape bg-brown-lighten">
+  <v-card :disabled="loadingPull"  :loading="loadingPull" elevation="0" class="overflow-hidden brown-lighten-shape brown-lighten-secondary-shape bg-brown-lighten">
+    <template v-slot:loader="{ isActive }">
+      <v-progress-linear
+        :active="isActive"
+        color="#FF8F00"
+        height="4"
+        indeterminate
+      ></v-progress-linear>
+    </template>
     <v-card-text>
       <div class="d-flex align-start mb-6">
         <div class="ml-auto z-1">
@@ -93,7 +112,8 @@ onMounted(() => {
         </div>
       </div>
       <h2 class="text-h1 font-weight-medium text-white">
-        {{ updateList.length }}
+        <v-progress-circular v-if="loading" color="green" indeterminate></v-progress-circular>
+        <div v-else>{{ updateList.length }}</div>
       </h2>
       <span class="text-subtitle-1 text-medium-emphasis text-white">需要更新的插件数量</span>
     </v-card-text>

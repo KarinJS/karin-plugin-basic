@@ -4,6 +4,12 @@ export default async function (fastify, options) {
   fastify.get('/checkUpdate', async (request, reply) => {
     const plugins = Update.getPlugins()
     let updatePlugins = []
+    try {
+      const { data, count = 0 } = await Update.checkUpdate(process.cwd())
+      if (data) {
+        updatePlugins.push('Karin')
+      }
+    } catch (error) {}
     for (const plugin of plugins) {
       const path = `${process.cwd()}/plugins/${plugin}`
       try {
