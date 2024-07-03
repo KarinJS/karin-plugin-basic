@@ -1,7 +1,7 @@
 import fs from 'fs'
 import Config from '../lib/config.js'
 import { Restart } from './restart.js'
-import { Update, common, plugin, segment } from '#Karin'
+import { Update, common, plugin, segment, exec } from 'node-karin'
 
 const List = []
 export class update extends plugin {
@@ -41,7 +41,7 @@ export class update extends plugin {
   }
 
   async updateList (_e, isReply = true) {
-    const list = Update.getPlugins()
+    const list = common.getPlugins()
     /** 清空List */
     List.length = 0
     List.push(...list)
@@ -49,7 +49,7 @@ export class update extends plugin {
     list.forEach((item, index) => {
       res += `${index + 1}. ${item}\n`
     })
-    isReply && await this.e.reply([
+    isReply && await this.reply([
       '\n插件列表：',
       '更新：#更新插件 序号',
       '检查更新：#检查更新 序号',
@@ -146,9 +146,29 @@ export class update extends plugin {
     if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
     try {
       const { data } = await Update.update(_path, cmd)
+
+      if (name === 'karin') {
+        // 获取当前源最新版本 npm show node-karin version
+        const Current = (await exec('npm show node-karin version', false, { cwd: _path, env: process.env })).stdout.trim()
+        // 获取本地node-karin版本 npm ls node-karin
+        const res = (await exec('npm ls node-karin', false, { cwd: _path, env: process.env })).stdout.trim()
+        const karinVersion = res.match(/node-karin@(.*) /)?.[1]
+        // 对比版本 如果小于最新版本则更新 获取当前版本失败也更新
+        if (!karinVersion || karinVersion !== Current) {
+          await exec('pnpm install -P', true, { cwd: _path, env: process.env })
+        }
+      }
+
       await this.reply(`\n${name}${data}`, { at: true })
 
       if (!data.includes('更新成功')) return true
+
+      // 更新成功之后 跑一遍对应包的依赖安装 先获取包名
+      if (name !== 'karin') {
+        const pkg = common.readJson(_path + '/package.json')
+        const cmd = `pnpm install --filter=${pkg.name}`
+        await exec(cmd, true, { cwd: _path, env: process.env })
+      }
 
       if (Config.Config.restart) {
         await this.reply(`\n更新完成，开始重启 本次运行时间：${common.uptime()}`, { at: true })
@@ -176,14 +196,22 @@ export class update extends plugin {
     let cmd = 'git pull'
     if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
 
+    let isRestart = false
+
     try {
-      const { data } = await Update.update(process.cwd(), cmd)
-      msg.push(`Karin：${data}`)
+      // 判断是否为git仓库
+      const res = await exec('git remote get-url origin', false, { cwd: process.cwd(), env: process.env })
+      if (res.status === 'ok') {
+        const { data } = await Update.update(process.cwd(), cmd)
+        msg.push(`Karin：${data}`)
+      }
+
+      // 更新依赖 emmm 主要是为了更新node-karin 先这样 后续兼容其他包管理器 包括使用其他源获取最新版本
+      await exec('pnpm install -P', false, { cwd: process.cwd(), env: process.env })
     } catch (error) {
       msg.push(`Karin：${error.message}`)
     }
 
-    let isRestart = false
     const promises = list.map(async name => {
       /** 拼接路径 */
       const item = process.cwd() + `/plugins/${name}`
