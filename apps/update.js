@@ -228,7 +228,7 @@ export class update extends plugin {
     // 更新依赖 emmm 主要是为了更新node-karin 先这样 后续兼容其他包管理器 包括使用其他源获取最新版本
     await exec('pnpm install -P', false, { cwd: process.cwd(), env: process.env })
     // 执行npx init
-    await exec('npx node-karin init', true, { cwd: process.cwd(), env: process.env })
+    await exec('npx init', true, { cwd: process.cwd(), env: process.env })
 
     if (Config.Config.forward) {
       const elements = msg.map(i => segment.text(i))
