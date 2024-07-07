@@ -156,10 +156,12 @@ export class update extends plugin {
         // 对比版本 如果小于最新版本则更新 获取当前版本失败也更新
         if (!karinVersion || karinVersion !== Current) {
           await exec('pnpm install -P', true, { cwd: _path, env: process.env })
+          // 执行npx init
+          await exec('npx node-karin init', true, { cwd: _path, env: process.env })
         }
       }
 
-      await this.reply(`\n${name}${data}`, { at: true })
+      await this.reply(`\n${name}: ${data}`, { at: true })
 
       if (!data.includes('更新成功')) return true
 
@@ -192,7 +194,7 @@ export class update extends plugin {
   async updateAll () {
     this.e.reply('正在进行全部更新，请稍后...', { at: true })
     const msg = []
-    const list = Update.getPlugins()
+    const list = common.getPlugins()
     let cmd = 'git pull'
     if (this.e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
 
@@ -205,9 +207,6 @@ export class update extends plugin {
         const { data } = await Update.update(process.cwd(), cmd)
         msg.push(`Karin：${data}`)
       }
-
-      // 更新依赖 emmm 主要是为了更新node-karin 先这样 后续兼容其他包管理器 包括使用其他源获取最新版本
-      await exec('pnpm install -P', false, { cwd: process.cwd(), env: process.env })
     } catch (error) {
       msg.push(`Karin：${error.message}`)
     }
@@ -225,6 +224,11 @@ export class update extends plugin {
     })
 
     await Promise.all(promises)
+
+    // 更新依赖 emmm 主要是为了更新node-karin 先这样 后续兼容其他包管理器 包括使用其他源获取最新版本
+    await exec('pnpm install -P', false, { cwd: process.cwd(), env: process.env })
+    // 执行npx init
+    await exec('npx node-karin init', true, { cwd: process.cwd(), env: process.env })
 
     if (Config.Config.forward) {
       const elements = msg.map(i => segment.text(i))
