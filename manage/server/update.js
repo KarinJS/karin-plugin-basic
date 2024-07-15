@@ -1,4 +1,4 @@
-import { Update } from '#Karin'
+import { Update } from 'node-karin'
 
 export default async function (fastify, options) {
   fastify.get('/checkUpdate', async (request, reply) => {
@@ -9,7 +9,7 @@ export default async function (fastify, options) {
       if (data) {
         updatePlugins.push('Karin')
       }
-    } catch (error) {}
+    } catch (error) { }
     for (const plugin of plugins) {
       const path = `${process.cwd()}/plugins/${plugin}`
       try {
@@ -17,7 +17,7 @@ export default async function (fastify, options) {
         if (data) {
           updatePlugins.push(plugin)
         }
-      } catch (error) {}
+      } catch (error) { }
     }
 
     return reply.send({

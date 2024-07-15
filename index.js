@@ -1,5 +1,5 @@
 import path from 'path'
-import { logger, common } from '#Karin'
+import { logger, common } from 'node-karin'
 
 /** 当前文件的绝对路径 */
 const filePath = common.absPath(import.meta.url.replace(/^file:(\/\/\/|\/\/)/, ''))
