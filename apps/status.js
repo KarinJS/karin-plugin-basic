@@ -1,6 +1,6 @@
 import moment from 'moment'
 import Config from '../lib/config.js'
-import { redis, Bot, Cfg, plugin } from '#Karin'
+import { redis, Bot, Cfg, plugin } from 'node-karin'
 
 let recv_count = ''
 let send_count = ''

@@ -1,4 +1,4 @@
-import { redis } from '#Karin'
+import { redis } from 'node-karin'
 import moment from 'moment'
 
 async function getStatsList (key) {

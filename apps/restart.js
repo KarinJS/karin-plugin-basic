@@ -1,5 +1,5 @@
 import Config from '../lib/config.js'
-import { plugin, level, exec, common } from '#Karin'
+import { plugin, level, exec, common } from 'node-karin'
 
 export class Restart extends plugin {
   constructor () {
