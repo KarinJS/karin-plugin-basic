@@ -1,8 +1,8 @@
-import { Update } from 'node-karin'
+import { common, Update } from 'node-karin'
 
 export default async function (fastify, options) {
   fastify.get('/checkUpdate', async (request, reply) => {
-    const plugins = Update.getPlugins()
+    const plugins = common.getPlugins()
     let updatePlugins = []
     try {
       const { data, count = 0 } = await Update.checkUpdate(process.cwd())
@@ -29,7 +29,7 @@ export default async function (fastify, options) {
   fastify.post('/update', async (request, reply) => {
     const { force } = request.body
     const msg = []
-    let list = Update.getPlugins()
+    let list = common.getPlugins()
     let cmd = force ? 'git reset --hard && git pull --allow-unrelated-histories' : 'git pull'
     try {
       const { data } = await Update.update(process.cwd(), cmd)
