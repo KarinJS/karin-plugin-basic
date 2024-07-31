@@ -4,12 +4,15 @@ status: true
 # 全部更新是否使用转发
 forward: true
 
+# 默认重启是否为前台重启 true为前台重启 false为后台重启
+restartMode: false
+
 # 重启配置
 pm2:
   # 重启是否调用pm2 如果不调用则会直接关机 此配置适合有进程守护的程序
   enable: true
   # 调用pm2指令 如使用不同的包管理器请自行修改
-  cmd: pnpm start
+  cmd: npx karin pm2
 
 # 更新完成是否自动重启
 restart: true

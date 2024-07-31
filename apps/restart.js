@@ -14,7 +14,7 @@ export class Restart extends plugin {
           permission: 'master',
         },
         {
-          reg: /^#重启$/,
+          reg: /^#(前台|后台)?重启$/,
           fnc: 'restart',
           permission: 'master',
         },
@@ -46,11 +46,30 @@ export class Restart extends plugin {
     const key = `karin:restart:${options.id}`
     await level.put(key, options)
 
-    if (Config.pm2.enable) {
-      await exec(Config.pm2.cmd)
+    const fn = async () => {
+      if (Config.pm2.enable) {
+        await exec(Config.pm2.cmd)
+        process.exit()
+      } else {
+        return await this.CmdStop()
+      }
+    }
+
+    /** 默认 */
+    if (this.e.msg.includes('前台')) {
+      process.send({ action: 'result', env: process.env })
       process.exit()
+    } else if (this.e.msg.includes('后台')) {
+      await fn()
     } else {
-      return await this.CmdStop()
+      /** 读取配置 */
+      if (Config?.restartMode) {
+        process.send({ action: 'result', env: process.env })
+        process.exit()
+      }
+
+      /** 后台重启 */
+      await fn()
     }
   }
 
