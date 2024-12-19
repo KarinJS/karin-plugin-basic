@@ -1,0 +1,6 @@
+{
+  "status": "是否统计状态 关闭后可降低redis压力...",
+  "forward": "全部更新是否使用转发",
+  "restartMode": "默认重启是否为前台重启 true为前台重启 false为后台重启",
+  "restart": "更新完成是否自动重启"
+}

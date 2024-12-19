@@ -1,0 +1,11 @@
+# 是否统计状态 关闭后可降低redis压力...
+status: true
+
+# 全部更新是否使用转发
+forward: true
+
+# 默认重启是否为前台重启 true为前台重启 false为后台重启
+restartMode: true
+
+# 更新完成是否自动重启
+restart: true
