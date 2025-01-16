@@ -1,13 +1,13 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { changelog, checkGitPluginUpdate, checkPkgUpdate, getCommit, getGitPlugins, getNpmPlugins, getPkgVersion, karin, updateAllGitPlugin, updateAllPkg, updateGitPlugin, updatePkg } from 'node-karin'
+import { changelog, checkGitPluginUpdate, checkPkgUpdate, getCommit, getPlugins, getPkgVersion, karin, updateAllGitPlugin, updateAllPkg, updateGitPlugin, updatePkg } from 'node-karin'
 
 const cache: string[] = []
 
 const getAll = async () => {
   if (cache.length) return cache
-  const git = await getGitPlugins(false)
-  const npm = await getNpmPlugins()
+  const git = await getPlugins('git', false)
+  const npm = await getPlugins('npm', false)
   const list = [
     'npm:node-karin',
     ...git.map(name => `git:${name}`),
