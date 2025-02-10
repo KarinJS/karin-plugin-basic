@@ -25,7 +25,7 @@ export const status = karin.command(/^#状态$/, async (e) => {
 
   await e.reply([
     '------机器人状态------',
-    `当前版本：v${process.env.karin_app_version}`,
+    `当前版本：v${process.env.KARIN_VERSION}`,
     `内存占用：${MB()}MB`,
     `运行时间：${uptime()}`,
     '------今日统计------',
