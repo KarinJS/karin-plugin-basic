@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.2...v1.0.3) (2025-03-04)
+
+
+### Bug Fixes
+
+* dev ([33bd81d](https://github.com/KarinJS/karin-plugin-basic/commit/33bd81d22200134436481ef85e6ae26d6ed5974c))
+* 修正 [#7](https://github.com/KarinJS/karin-plugin-basic/issues/7)  部分信息统计 ([04d0e07](https://github.com/KarinJS/karin-plugin-basic/commit/04d0e07c768a0cd6cfda007de38ff4befde986e9))
+
 ## [1.0.2](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.1...v1.0.2) (2025-02-10)
 
 
