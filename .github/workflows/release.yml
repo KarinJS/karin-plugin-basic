@@ -38,8 +38,8 @@ jobs:
       # 构建输出
       - run: npm run build
         if: ${{ steps.release.outputs.release_created }}
-      # 删除开发依赖、对等依赖
-      - run: npm run pr clean
+      # 删除开发依赖
+      - run: npm pkg delete devDependencies
         if: ${{ steps.release.outputs.release_created }}
       # 发布到 npm
       - run: npm run pub

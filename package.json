@@ -14,8 +14,7 @@
   "type": "module",
   "main": "dist/index.js",
   "files": [
-    "/lib/**/*.js",
-    "/lib/**/*.d.ts",
+    "dist",
     "config",
     "resources",
     "LICENSE",
