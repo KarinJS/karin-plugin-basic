@@ -1,6 +1,7 @@
 import moment from 'node-karin/moment'
 import { config } from '@/utils/config'
-import { EVENT_COUNT, karin, RECV_MSG, redis, SEND_MSG } from 'node-karin'
+import { EVENT_COUNT, hooks, karin, RECV_MSG, redis, SEND_MSG } from 'node-karin'
+
 import type { Contact } from 'node-karin'
 
 export const status = karin.command(/^#状态$/, async (e) => {
@@ -78,10 +79,24 @@ const uptime = () => {
 (() => {
   if (!config().status) return
 
-  karin.on(RECV_MSG, (contact) => redis.incr(`${RECV_MSG}:${createKey(contact)}`))
-  karin.on(SEND_MSG, (contact) => redis.incr(`${SEND_MSG}:${createKey(contact)}`))
-  karin.on(EVENT_COUNT, ({ plugin, event }) => {
-    const key = `${EVENT_COUNT}:${moment().format('YYYY-MM-DD')}:${plugin.file.basename}:${plugin.file.method}`
-    redis.incr(key)
+  hooks.message((event, next) => {
+    try {
+      redis.incr(`${RECV_MSG}:${createKey(event.contact)}`)
+    } finally {
+      next()
+    }
   })
+
+  hooks.sendMsg.message((contact, _, __, next) => {
+    try {
+      redis.incr(`${SEND_MSG}:${createKey(contact)}`)
+    } finally {
+      next()
+    }
+  })
+
+  // karin.on(EVENT_COUNT, ({ plugin, event }) => {
+  //   const key = `${EVENT_COUNT}:${moment().format('YYYY-MM-DD')}:${plugin.file.basename}:${plugin.file.method}`
+  //   redis.incr(key)
+  // })
 })()

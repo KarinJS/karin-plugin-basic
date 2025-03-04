@@ -1,5 +1,5 @@
-/** `config.yaml` 文件的类型定义 */
-export type Config = {
+/** `config.json` 文件的类型定义 */
+export interface Config {
   /** 是否统计状态 关闭后可降低redis压力 */
   status: boolean
   /** 全部更新是否使用转发 */

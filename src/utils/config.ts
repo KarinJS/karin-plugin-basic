@@ -1,4 +1,6 @@
-import { dirPath } from '@/utils'
+import fs from 'node:fs'
+import path from 'node:path'
+import { info } from '@/root'
 import {
   watch,
   basePath,
@@ -10,30 +12,33 @@ import type { Config } from '@/types/config'
 
 let cache: Config | undefined
 
-/**
- * @description package.json
- */
-export const pkg = () => requireFileSync(`${dirPath}/package.json`)
+/** 用户配置目录 */
+const dir = path.join(basePath, info.name, 'config')
+/** 默认配置目录 */
+const defConfig = path.join(info.dir, 'config')
 
-/** 用户配置的插件名称 */
-const pluginName = pkg().name.replace(/\//g, '-')
-/** 用户配置 */
-const dirConfig = `${basePath}/${pluginName}/config`
-/** 默认配置 */
-const defConfig = `${dirPath}/config/config`
+const main = () => {
+  /** 复制默认配置 */
+  copyConfigSync(defConfig, dir, ['.json'])
 
-/**
- * @description 初始化配置文件
- */
-copyConfigSync(defConfig, dirConfig, ['.yaml'])
+  /**
+   * @description 监听配置文件
+   */
+  setTimeout(() => {
+    const list = filesByExt(dir, '.json', 'abs')
+    list.forEach(file => watch(file, (old, now) => {
+      cache = undefined
+    }))
+  }, 2000)
+}
 
 /**
  * @description 配置文件
  */
 export const config = (): Config => {
   if (cache) return cache
-  const user = requireFileSync(`${dirConfig}/config.yaml`)
-  const def = requireFileSync(`${defConfig}/config.yaml`)
+  const user = requireFileSync(`${dir}/config.json`)
+  const def = requireFileSync(`${defConfig}/config.json`)
   const result: Config = { ...def, ...user }
 
   cache = result
@@ -41,11 +46,14 @@ export const config = (): Config => {
 }
 
 /**
- * @description 监听配置文件
+ * 写入配置
+ * @param config 配置
  */
-setTimeout(() => {
-  const list = filesByExt(dirConfig, '.yaml', 'abs')
-  list.forEach(file => watch(file, (old, now) => {
-    cache = undefined
-  }))
-}, 2000)
+export const writeConfig = (config: Config) => {
+  const def = requireFileSync(`${defConfig}/config.json`)
+  const result: Config = { ...def, ...config }
+
+  cache = result
+  fs.writeFileSync(`${dir}/config.json`, JSON.stringify(result, null, 2))
+}
+main()
