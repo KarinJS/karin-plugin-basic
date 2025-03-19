@@ -71,9 +71,11 @@ const MB = () => (process.memoryUsage().rss / 1024 / 1024).toFixed(2)
 
 const uptime = () => {
   const uptime = process.uptime()
-  const hour = Math.floor(uptime / 3600)
+  const day = Math.floor(uptime / 86400)
+  const hour = Math.floor((uptime % 86400) / 3600)
   const minute = Math.floor((uptime % 3600) / 60)
-  return `${hour}小时${minute}分钟`
+  const seconds = Math.floor(uptime % 60)
+  return `${day}天${hour}小时${minute}分钟${seconds}秒`
 }
 
 (() => {

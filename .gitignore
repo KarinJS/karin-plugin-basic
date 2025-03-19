@@ -27,6 +27,7 @@ config/config/pm2.yaml
 index.js
 pnpm-workspace.yaml
 @karinjs/
+/dist
 1.js
 src/test.ts
 *.cjs

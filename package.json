@@ -48,7 +48,7 @@
       "dist/apps"
     ],
     "ts-apps": [
-      "dist/apps"
+      "src/apps"
     ],
     "static": [
       "resources"
