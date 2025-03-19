@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.4...v1.0.5) (2025-03-19)
+
+
+### Bug Fixes
+
+* 优化状态的运行时间显示 ([02c68a1](https://github.com/KarinJS/karin-plugin-basic/commit/02c68a1442b33d3f45efc523a906ff2f995a5489))
+* 删除多余文件 ([a602dd3](https://github.com/KarinJS/karin-plugin-basic/commit/a602dd3469a4b8072393014fa2585ff1d61922e5))
+
 ## [1.0.4](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.3...v1.0.4) (2025-03-04)
 
 
