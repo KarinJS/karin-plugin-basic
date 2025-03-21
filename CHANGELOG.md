@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.5...v1.0.6) (2025-03-21)
+
+
+### Bug Fixes
+
+* 新增设置主人 ([a6967d7](https://github.com/KarinJS/karin-plugin-basic/commit/a6967d78541751e8cfbf54581327a8d29e8561c3))
+
 ## [1.0.5](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.4...v1.0.5) (2025-03-19)
 
 
