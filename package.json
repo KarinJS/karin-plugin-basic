@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/plugin-basic",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "karin plugin for basic functions",
   "homepage": "https://github.com/KarinJS/karin-plugin-basic",
   "bugs": {
