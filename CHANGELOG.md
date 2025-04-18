@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.7...v1.0.8) (2025-04-18)
+
+
+### Bug Fixes
+
+* 更新 tsconfig.json ([ac12ec1](https://github.com/KarinJS/karin-plugin-basic/commit/ac12ec12818f6827374bdc1191409ea3781f73f2))
+
 ## [1.0.7](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.6...v1.0.7) (2025-04-18)
 
 
