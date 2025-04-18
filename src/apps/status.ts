@@ -97,8 +97,11 @@ const uptime = () => {
     }
   })
 
-  // karin.on(EVENT_COUNT, ({ plugin, event }) => {
-  //   const key = `${EVENT_COUNT}:${moment().format('YYYY-MM-DD')}:${plugin.file.basename}:${plugin.file.method}`
-  //   redis.incr(key)
-  // })
+  hooks.eventCall((e, _, next) => {
+    try {
+      redis.incr(`${EVENT_COUNT}:${createKey(e.contact)}`)
+    } finally {
+      next()
+    }
+  })
 })()
