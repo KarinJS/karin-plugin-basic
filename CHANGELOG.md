@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.9](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.8...v1.0.9) (2025-05-09)
+
+
+### Bug Fixes
+
+* 修复又长又臭的显示 ([2dee921](https://github.com/KarinJS/karin-plugin-basic/commit/2dee9213d97455aed918330f4f849e92f18e7980))
+
 ## [1.0.8](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.7...v1.0.8) (2025-04-18)
 
 
