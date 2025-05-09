@@ -25,7 +25,7 @@
     "build": "tsc && tsup",
     "pub": "npm publish --access public",
     "sort": "npx sort-package-json",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx src/app.ts",
     "watch": "tsx watch src/index.ts",
     "karin": "karin"
   },
@@ -33,7 +33,7 @@
     "@types/node": "^20.17.30",
     "eslint": "^9.24.0",
     "neostandard": "^0.12.1",
-    "node-karin": "^1.7.14",
+    "node-karin": "^1.8.12",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"

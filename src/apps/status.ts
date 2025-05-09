@@ -74,8 +74,8 @@ const uptime = () => {
   const day = Math.floor(uptime / 86400)
   const hour = Math.floor((uptime % 86400) / 3600)
   const minute = Math.floor((uptime % 3600) / 60)
-  const seconds = Math.floor(uptime % 60)
-  return `${day}天${hour}小时${minute}分钟${seconds}秒`
+
+  return `${day > 0 ? `${day}天` : ''}${hour}小时${minute}分钟`
 }
 
 (() => {
