@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.9...v1.1.0) (2025-06-14)
+
+
+### Features
+
+* 添加web登录 closes [#11](https://github.com/KarinJS/karin-plugin-basic/issues/11) ([9f80c69](https://github.com/KarinJS/karin-plugin-basic/commit/9f80c69005fb2c96fd61c6c7c95335d60c20db87))
+
 ## [1.0.9](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.8...v1.0.9) (2025-05-09)
 
 
