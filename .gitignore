@@ -25,6 +25,7 @@ lerna-debug.log*
 node_modules/
 config/config/pm2.yaml
 index.js
+plugins/
 pnpm-workspace.yaml
 @karinjs/
 /dist

@@ -43,6 +43,13 @@ export default {
         label: '自动重启',
         description: '更新完成是否自动重启',
         defaultSelected: cfg.restart
+      }),
+      components.input.string('domain', {
+        color: 'success',
+        label: '自定义域名',
+        description: 'Web登录发送的自定义域名',
+        defaultValue: cfg.domain,
+        isRequired: false
       })
     ]
 

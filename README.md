@@ -21,3 +21,7 @@ pnpm add @karinjs/plugin-basic -w
 ```
 # 插件列表
 ```
+
+```
+#web登录
+```

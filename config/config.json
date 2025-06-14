@@ -2,5 +2,6 @@
   "status": true,
   "forward": true,
   "restartMode": true,
-  "restart": true
+  "restart": true,
+  "domain": ""
 }

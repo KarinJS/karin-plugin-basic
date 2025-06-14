@@ -8,4 +8,6 @@ export interface Config {
   restartMode: boolean
   /** 更新完成是否自动重启 */
   restart: boolean
+  /** 自定义登录域名 */
+  domain: string
 }

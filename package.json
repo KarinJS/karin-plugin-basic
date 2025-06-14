@@ -30,12 +30,12 @@
     "karin": "karin"
   },
   "devDependencies": {
-    "@types/node": "^20.17.30",
-    "eslint": "^9.24.0",
+    "@types/node": "^24.0.1",
+    "eslint": "^9.29.0",
     "neostandard": "^0.12.1",
-    "node-karin": "^1.8.12",
-    "tsup": "^8.4.0",
-    "tsx": "^4.19.3",
+    "node-karin": "^1.10.7",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "publishConfig": {
@@ -58,5 +58,8 @@
     ],
     "ts-web": "src/web.config.ts",
     "web": "dist/web.config.js"
+  },
+  "dependencies": {
+    "internal-ip": "^8.0.0"
   }
 }
