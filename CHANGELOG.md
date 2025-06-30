@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/KarinJS/karin-plugin-basic/compare/v1.1.0...v1.2.0) (2025-06-30)
+
+
+### Features
+
+* 导出基本函数以将插件作为基类使用 ([08cc7f7](https://github.com/KarinJS/karin-plugin-basic/commit/08cc7f7666e96015bb034d32545fcbfcd70bdab0))
+
 ## [1.1.0](https://github.com/KarinJS/karin-plugin-basic/compare/v1.0.9...v1.1.0) (2025-06-14)
 
 
