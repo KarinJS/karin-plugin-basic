@@ -4,6 +4,10 @@
 pnpm add @karinjs/plugin-basic -w
 ```
 
+## 在 webui 安装
+
+插件市场 -> `@karinjs/plugin-basic` -> 安装
+
 ## 基本指令
 
 ```
