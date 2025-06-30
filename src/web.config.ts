@@ -1,11 +1,12 @@
 import { info } from './root'
-import { components } from 'node-karin'
+import { components, defineConfig } from 'node-karin'
 import { config, writeConfig } from '@/utils/config'
 
 import type { Config } from '@/types/config'
 
-export default {
+export default defineConfig({
   info: {
+    id: info.name,
     name: '基础插件',
     version: info.version,
     description: info.pkg.description,
@@ -64,4 +65,4 @@ export default {
       message: '保存成功'
     }
   }
-}
+})
