@@ -25,7 +25,7 @@ body {
   padding: 30px;
   color: #0f172a;
   overflow: hidden;
-  background: #e0f2ff;
+  background: url('main.png') center/cover no-repeat, #e0f2ff;
   border-bottom: 1px solid rgba(148, 163, 184, 0.35);
 }
 
