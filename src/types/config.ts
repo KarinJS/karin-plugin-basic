@@ -10,4 +10,6 @@ export interface Config {
   restart: boolean
   /** 自定义登录域名 */
   domain: string
+  /** 是否自动更新 */
+  autoupdate: boolean
 }

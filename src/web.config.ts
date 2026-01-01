@@ -51,6 +51,12 @@ export default defineConfig({
         description: 'Web登录发送的自定义域名',
         defaultValue: cfg.domain,
         isRequired: false
+      }),
+      components.switch.create('autoupdate', {
+        color: 'success',
+        label: '自动更新',
+        description: '是否启用自动更新',
+        defaultSelected: cfg.autoupdate,
       })
     ]
 

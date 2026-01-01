@@ -30,13 +30,14 @@
     "karin": "karin"
   },
   "devDependencies": {
-    "@types/node": "^24.0.1",
-    "eslint": "^9.29.0",
-    "neostandard": "^0.12.1",
-    "node-karin": "^1.10.16",
-    "tsup": "^8.5.0",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "@karinjs/plugin-puppeteer": "^1.1.2",
+    "@types/node": "^25.0.3",
+    "eslint": "^9.39.2",
+    "neostandard": "^0.12.2",
+    "node-karin": "^1.14.1",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public",
@@ -60,6 +61,6 @@
     "web": "dist/web.config.js"
   },
   "dependencies": {
-    "internal-ip": "^8.0.0"
+    "internal-ip": "^8.0.1"
   }
 }

@@ -3,5 +3,6 @@
   "forward": true,
   "restartMode": true,
   "restart": true,
-  "domain": ""
+  "domain": "",
+  "autoupdate": false
 }

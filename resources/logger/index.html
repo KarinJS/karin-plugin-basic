@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日志查看器</title>
+  <link rel="stylesheet" href="{{pluResPath}}logger/index.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-bg-text">Karin Log</div>
+      <h1>📋 系统日志查看器</h1>
+      <div class="info">
+        <span class="date">{{date}}</span>
+        <span class="count">共 {{total}} 条日志</span>
+      </div>
+    </div>
+
+    <div class="logs-container">
+      {{each logs}}
+      <div class="log-item log-{{$value.level}}">
+        <span class="log-time">{{$value.time}}</span>
+        <span class="log-level level-{{$value.level}}">{{$value.level}}</span>
+        <span class="log-message">{{@ $value.messageHtml}}</span>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="footer">
+      <p>{{sys.copyright}}</p>
+    </div>
+  </div>
+</body>
+
+</html>

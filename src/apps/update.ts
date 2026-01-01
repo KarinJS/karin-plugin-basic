@@ -1,8 +1,16 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { changelog, checkGitPluginUpdate, checkPkgUpdate, getCommit, getPlugins, getPkgVersion, karin, updateAllGitPlugin, updateAllPkg, updateGitPlugin, updatePkg } from 'node-karin'
+import { changelog, checkGitPluginUpdate, checkPkgUpdate, getCommit, getPlugins, getPkgVersion, karin, updateAllGitPlugin, updateAllPkg, updateGitPlugin, updatePkg, segment, restartDirect, db } from 'node-karin'
+import { config } from '@/utils/config'
+import { sendToFirstAdmin } from '@/utils/utils'
 
+const NODE_KARIN_UPDATE_KEY = 'basic:update:node-karin'
 const cache: string[] = []
+
+interface BasicUpdateStat {
+  lastRemote: string
+  lastLocal: string
+}
 
 const getAll = async () => {
   if (cache.length) return cache
@@ -248,3 +256,51 @@ const parseLog = (pkg: string, local: string, count: number | string) => {
 
   return changelog.range(data, local, count) || '未找到对应的更新日志'
 }
+
+export const TaskUpdate = karin.task('Karin-定时更新检查', '*/10 * * * *', async () => {
+  if (process.env.NODE_ENV === 'development') return true
+
+  const res = await checkPkgUpdate('node-karin')
+  if (res.status !== 'yes') return true
+
+  const botIds = karin.getAllBotID()
+  const selfId = botIds.find(id => id.toString() !== 'console')
+  if (!selfId) return true
+
+  const oc = config()
+
+  if (oc.autoupdate) {
+    const up = await updatePkg('node-karin')
+    if (up.status === 'failed') {
+      await sendToFirstAdmin(selfId, [segment.text(`自动更新 node-karin 失败: ${String(up.data)}`)])
+      return true
+    }
+
+    await sendToFirstAdmin(selfId, [
+      segment.text(
+        `检测到插件 [node-karin] 有新版本~\n已自动更新 (v${up.local} → v${up.remote})，即将重启以应用更新`
+      ),
+    ])
+    await restartDirect({ isPm2: false, reloadDeps: true })
+    return true
+  }
+
+  const last = await db.get<BasicUpdateStat>(NODE_KARIN_UPDATE_KEY)
+  if (last && last.lastRemote === res.remote) return true
+
+  const msg = [
+    segment.text(
+      `检测到插件 [node-karin] 有新版本~\n当前版本: v${res.local}\n最新版本: v${res.remote}\n请发送 #更新 进行更新。`
+    ),
+  ] as Parameters<typeof karin.sendMsg>[2]
+
+  const messageId = await sendToFirstAdmin(selfId, msg)
+  if (!messageId) return false
+
+  await db.set(NODE_KARIN_UPDATE_KEY, {
+    lastRemote: res.remote,
+    lastLocal: res.local
+  })
+
+  return true
+}, { name: 'Karin-定时更新检查', log: false })
