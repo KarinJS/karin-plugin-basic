@@ -28,9 +28,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           # 设置 Node.js 版本
-          node-version: 20
+          node-version: 24
           # 设置 npm 源
           registry-url: "https://registry.npmjs.org"
+      - name: 更新npm到最新版本
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm install -g npm@latest
       # 安装依赖 不安装对等依赖
       - run: npm install --config.auto-install-peers=false --ignore-scripts --omit=peer
         env:
