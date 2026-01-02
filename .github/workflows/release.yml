@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 jobs:
   # 设置 release-please 任务
   release-please:
@@ -43,6 +44,4 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       # 发布到 npm
       - run: npm run pub
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: ${{ steps.release.outputs.release_created }}
