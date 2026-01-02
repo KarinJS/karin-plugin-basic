@@ -1,10 +1,10 @@
-import { config } from '@/utils/config'
+import { cfg } from '@/config'
 import { common, karin, logger, restart } from 'node-karin'
 
 export const restarts = karin.command(/^#重启$/, async (e) => {
   try {
     await e.reply(`开始重启 本次运行时间: ${common.uptime()}`, { at: true })
-    const { status, data } = await restart(e.selfId, e.contact, e.messageId, config().restartMode)
+    const { status, data } = await restart(e.selfId, e.contact, e.messageId, cfg.get().restartMode)
     if (status === 'failed') throw data
     return true
   } catch (error) {

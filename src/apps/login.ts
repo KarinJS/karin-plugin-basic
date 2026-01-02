@@ -1,4 +1,4 @@
-import { config } from '@/utils/config'
+import { cfg } from '@/config'
 import karin, { common, contactFriend, logger, segment } from 'node-karin'
 import axios from 'node-karin/axios'
 import os from 'node:os'
@@ -7,7 +7,7 @@ const url = { IPv4: ['https://4.ipw.cn'], IPv6: ['https://6.ipw.cn'] }
 
 export const login = karin.command(/#?(面板|web)登录$/i, async (e) => {
   const net = os.networkInterfaces()
-  const cfg = config()
+  const config = cfg.get()
   const IP: { lan: { ipv4: null | string, ipv6: null | string }, net: { ipv4: null | string, ipv6: null | string } } =
     { lan: { ipv4: null, ipv6: null }, net: { ipv4: null, ipv6: null } }
   for (const i in net) {
@@ -35,7 +35,7 @@ export const login = karin.command(/#?(面板|web)登录$/i, async (e) => {
   const port = process.env.HTTP_PORT
   const token = process.env.HTTP_AUTH_KEY
   const msg = [segment.text('面板登录地址：')]
-  if (cfg.domain) msg.push(segment.text(`- 自定义域名: ${cfg.domain}/web/login?token=${token}`))
+  if (config.domain) msg.push(segment.text(`- 自定义域名: ${config.domain}/web/login?token=${token}`))
   msg.push(segment.text(`- 内网地址: ${IP.lan.ipv4 ? `http://${IP.lan.ipv4}:${port}/web/login?token=${token}` : `http://${IP.lan.ipv4}:${port}/web/login?token=${token}`}`))
   if (IP.net.ipv4) msg.push(segment.text(`- 外网IPv4地址: http://${IP.net.ipv4}:${port}/web/login?token=${token}`))
   if (IP.net.ipv6) msg.push(segment.text(`- 外网IPv6地址: http://${IP.net.ipv6}:${port}/web/login?token=${token}`))

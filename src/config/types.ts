@@ -12,4 +12,6 @@ export interface Config {
   domain: string
   /** 是否自动更新 */
   autoupdate: boolean
+  /** 自动重启延迟时间，单位秒，0表示不自动重启 */
+  autorestart: number | string
 }

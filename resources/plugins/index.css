@@ -1,0 +1,210 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft YaHei';
+  background: radial-gradient(circle at 20% 50%, rgba(120, 200, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(180, 220, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(200, 230, 255, 0.2) 0%, transparent 50%),
+    linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #f0f7ff 100%);
+  padding: 16px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(100, 150, 200, 0.35);
+  overflow: hidden;
+}
+
+.header {
+  position: relative;
+  padding: 30px;
+  color: #fff;
+  background: url('../img/plugin.png') center/cover no-repeat,
+    linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.info {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+.info span {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+}
+
+.plugins-container {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.plugin-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e3f2fd;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.plugin-header {
+  margin-bottom: 15px;
+}
+
+.plugin-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.plugin-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+  word-break: break-word;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.platform-icon {
+  font-size: 14px;
+}
+
+.platform-npm {
+  background: linear-gradient(135deg, #cb3837 0%, #d63031 100%);
+  color: white;
+}
+
+.platform-git {
+  background: linear-gradient(135deg, #f05032 0%, #ff6b35 100%);
+  color: white;
+}
+
+.platform-app {
+  background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+  color: white;
+}
+
+.plugin-version {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #e2e8f0;
+  color: #4a5568;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.plugin-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plugin-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #4a5568;
+  word-break: break-word;
+  flex: 1;
+}
+
+.no-description {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.plugin-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.meta-label {
+  color: #718096;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.meta-value {
+  color: #2d3748;
+  word-break: break-all;
+  flex: 1;
+}
+
+.plugin-path {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 11px;
+  color: #42a5f5;
+}
+
+.plugin-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.plugin-index {
+  font-size: 12px;
+  color: #a0aec0;
+  font-weight: 600;
+}
+
+.footer {
+  background: #f8f9fa;
+  padding: 15px 30px;
+  text-align: center;
+  color: #6c757d;
+  font-size: 12px;
+  border-top: 1px solid #dee2e6;
+}

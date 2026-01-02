@@ -1,8 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { changelog, checkGitPluginUpdate, checkPkgUpdate, getCommit, getPlugins, getPkgVersion, karin, updateAllGitPlugin, updateAllPkg, updateGitPlugin, updatePkg, segment, restartDirect, db } from 'node-karin'
-import { config } from '@/utils/config'
+import { changelog, checkGitPluginUpdate, checkPkgUpdate, getCommit, getPlugins, getPkgVersion, karin, updateAllGitPlugin, updateAllPkg, updateGitPlugin, updatePkg, segment, restartDirect, db, logger, getPluginInfo } from 'node-karin'
+import { cfg } from '@/config'
 import { sendToFirstAdmin } from '@/utils/utils'
+import { render } from '@/utils/render'
 
 const NODE_KARIN_UPDATE_KEY = 'basic:update:node-karin'
 const cache: string[] = []
@@ -31,22 +32,155 @@ const getAll = async () => {
 
 /** 插件列表 */
 export const plugins = karin.command(/^#插件列表$/, async (e) => {
-  const list = await getAll()
-  list.forEach((item, index) => {
-    item += `${index + 1}. ${item}`
-  })
+  try {
+    // 获取所有插件的详细信息
+    const allPlugins = await getPlugins('all', true)
 
-  await e.reply([
-    '\n插件列表：',
-    '更新：#更新插件 序号或名称',
-    '检查更新：#检查更新 序号或名称',
-    '日志：#更新日志 条数 序号或名称',
-    ...list,
-  ].join('\n'), { at: true })
+    // 处理插件数据，准备渲染
+    const pluginsData: Array<{
+      index: number
+      name: string
+      type: string
+      typeIcon: string
+      version: string
+      description: string
+      author: string
+      dir: string
+    }> = []
 
-  return true
+    let index = 1
+
+    for (const plugin of allPlugins) {
+      // app 插件需要展开 apps 数组
+      if (plugin.type === 'app') {
+        const apps = plugin.apps || []
+
+        for (const appPath of apps) {
+          // 从路径中提取文件名（不含扩展名）
+          const fileName = path.basename(appPath, path.extname(appPath))
+
+          pluginsData.push({
+            index: index++,
+            name: fileName,
+            type: 'app',
+            typeIcon: '🔌',
+            version: '',
+            description: '',
+            author: '未知',
+            dir: appPath,
+          })
+        }
+      } else {
+        // npm 和 git 插件
+        const pkgData = plugin.pkgData || {}
+
+        // 获取作者信息
+        let author = '未知'
+        if (typeof pkgData.author === 'string') {
+          author = pkgData.author
+        } else if (pkgData.author && typeof pkgData.author === 'object' && 'name' in pkgData.author) {
+          author = pkgData.author.name || '未知'
+        }
+
+        // 获取描述信息
+        const description = pkgData.description || ''
+
+        // 获取版本信息
+        const version = pkgData.version || ''
+
+        // 设置平台图标
+        const typeIcon = plugin.type === 'npm' ? '📦' : '🔧'
+
+        pluginsData.push({
+          index: index++,
+          name: plugin.name,
+          type: plugin.type,
+          typeIcon,
+          version,
+          description,
+          author,
+          dir: plugin.dir,
+        })
+      }
+    }
+
+    if (pluginsData.length === 0) {
+      await e.reply('\n暂无插件', { at: true })
+      return true
+    }
+
+    // 尝试渲染图片
+    const img = await render('plugins/index', {
+      plugins: pluginsData,
+      total: pluginsData.length,
+      date: new Date().toLocaleString('zh-CN')
+    })
+
+    await e.reply(img)
+    return true
+  } catch (error) {
+    logger.error('渲染插件列表失败:', error)
+
+    // 渲染失败时，使用文本方式发送
+    try {
+      const list = await getAll()
+      const textList = list.map((item, index) => `${index + 1}. ${item}`)
+
+      await e.reply([
+        '\n插件列表：',
+        '更新：#更新插件 名称',
+        '检查更新：#检查更新 序号或名称',
+        '日志：#更新日志 条数 序号或名称',
+        ...textList,
+      ].join('\n'), { at: true })
+    } catch (fallbackError) {
+      logger.error('发送文本插件列表失败:', fallbackError)
+      await e.reply('\n获取插件列表失败，请查看日志', { at: true })
+    }
+
+    return true
+  }
 }, { name: '插件列表', perm: 'admin' })
 
+/** 更新插件 */
+export const updatePlugin = karin.command(/^#(全部)?(强制)?更新(.*)?$/, async (e) => {
+  const [, all, force, name = 'node-karin'] = e.msg.match(/^#(全部)?(强制)?更新(.*)?$/)!
+  const cmd = force ? 'git reset --hard && git pull --allow-unrelated-histories' : 'git pull'
+  if (all) {
+    try {
+      const git = await updateAllGitPlugin(cmd)
+      const npm = await updateAllPkg()
+      await e.reply([
+        '\n全部更新完成',
+        '-----',
+        git,
+        '-----',
+        npm,
+      ].join('\n'), { at: true })
+    } catch (error) {
+      await e.reply(`\n更新全部插件失败: ${(error as Error).message || '未知错误'}`, { at: true })
+    }
+  } else {
+    let res
+    if (name !== 'node-karin') {
+      const info = getPluginInfo(name.trim())
+      if (!info) return await e.reply('插件未安装~', { reply: true })
+      if (info.type === 'app') return await e.reply('应用插件不支持更新~', { reply: true })
+      res = info.type === 'git'
+        ? await updateGitPlugin(info.dir, cmd, 120)
+        : await updatePkg(info.name)
+    } else {
+      res = await updatePkg('node-karin')
+    }
+    if (res.status === 'failed') {
+      const { data } = res
+      const msg = typeof data === 'string' ? data : `获取更新信息失败: ${data.message || '未知错误'}`
+      await e.reply(`\n${msg}`, { at: true })
+      return true
+    }
+    return await e.reply(`\n更新成功\n${res.data}`, { at: true })
+  }
+})
 /** 检查更新 */
 export const check = karin.command(/^#检查更新/, async (e) => {
   let name = e.msg.replace(/^#检查更新/, '').trim()
@@ -118,62 +252,6 @@ export const check = karin.command(/^#检查更新/, async (e) => {
   return true
 }, { name: '检查更新', perm: 'admin' })
 
-/** 更新插件 */
-export const update = karin.command(/^#(强制)?更新(插件)?(?!列表|日志)/, async (e) => {
-  let name = e.msg.replace(/^#(强制)?更新(插件)?(?!列表|日志)/, '').trim()
-
-  /** 传入的是序号 */
-  const index = Number(name)
-  if (index && typeof index === 'number') {
-    const list = await getAll()
-    name = list[index - 1]
-  }
-
-  if (!name) {
-    await e.reply('\n请输入正确的插件名称或序号~', { at: true })
-    return true
-  }
-
-  if (name.includes('git:')) {
-    name = name.replace('git:', '')
-    const file = path.join(process.cwd(), 'plugins', name.replace('git:', ''))
-
-    let cmd = 'git pull'
-    if (e.msg.includes('强制')) cmd = 'git reset --hard && git pull --allow-unrelated-histories'
-
-    const result = await updateGitPlugin(file, cmd, 120)
-    if (result.status === 'failed') {
-      const { data } = result
-      const msg = typeof data === 'string' ? data : `获取更新信息失败: ${data.message || '未知错误'}`
-      await e.reply(msg, { at: true })
-      return true
-    }
-
-    await e.reply(`\n${result.data}`, { at: true })
-    return true
-  }
-
-  if (name.includes('npm:')) {
-    name = name.replace('npm:', '')
-    const result = await updatePkg(name)
-
-    if (result.status === 'failed') {
-      const { data } = result
-      const msg = typeof data === 'string' ? data : `获取更新信息失败: ${data.message || '未知错误'}`
-      await e.reply(`\n${msg}`, { at: true })
-      return true
-    }
-
-    const log = parseLog(name, result.local, result.remote)
-
-    await e.reply(`\n更新成功\n当前版本: ${result.remote}\n更新日志: \n${log}`, { at: true })
-    return true
-  }
-
-  await e.reply('\n请输入正确的插件名称或序号~', { at: true })
-  return true
-}, { name: '更新插件', perm: 'admin' })
-
 /** 更新日志 */
 export const log = karin.command(/^#更新日志/, async (e) => {
   // 更新日志 npm:node-karin 10
@@ -220,26 +298,6 @@ export const log = karin.command(/^#更新日志/, async (e) => {
   return true
 }, { name: '更新日志', perm: 'admin' })
 
-/** 全部更新 */
-export const updateAll = karin.command(/^#全部(强制)?更新$/, async (e) => {
-  const cmd = e.msg.includes('强制') ? 'git reset --hard && git pull --allow-unrelated-histories' : 'git pull'
-  try {
-    const git = await updateAllGitPlugin(cmd)
-    const npm = await updateAllPkg()
-    await e.reply([
-      '\n全部更新完成',
-      '-----',
-      git,
-      '-----',
-      npm,
-    ].join('\n'), { at: true })
-  } catch (error) {
-    await e.reply(`\n全部更新失败: ${(error as Error).message || '未知错误'}`, { at: true })
-  }
-
-  return true
-}, { name: '全部更新', perm: 'admin' })
-
 /**
  * @param pkg npm包名
  * @param local 本地版本
@@ -267,9 +325,9 @@ export const TaskUpdate = karin.task('Karin-定时更新检查', '*/10 * * * *',
   const selfId = botIds.find(id => id.toString() !== 'console')
   if (!selfId) return true
 
-  const oc = config()
+  const config = cfg.get()
 
-  if (oc.autoupdate) {
+  if (config.autoupdate) {
     const up = await updatePkg('node-karin')
     if (up.status === 'failed') {
       await sendToFirstAdmin(selfId, [segment.text(`自动更新 node-karin 失败: ${String(up.data)}`)])

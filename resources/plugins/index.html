@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>插件列表</title>
+  <link rel="stylesheet" href="{{pluResPath}}plugins/index.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔌 插件列表</h1>
+      <div class="info">
+        <span class="date">{{date}}</span>
+        <span class="count">共 {{total}} 个插件</span>
+      </div>
+    </div>
+
+    <div class="plugins-container">
+      {{each plugins}}
+      <div class="plugin-card">
+        <div class="plugin-header">
+          <div class="plugin-name-row">
+            <h3 class="plugin-name">{{$value.name}}</h3>
+            <span class="platform-badge platform-{{$value.type}}">
+              <span class="platform-icon">{{$value.typeIcon}}</span>
+              {{$value.type}}
+            </span>
+          </div>
+          {{if $value.version}}
+          <span class="plugin-version">v{{$value.version}}</span>
+          {{/if}}
+        </div>
+
+        <div class="plugin-body">
+          {{if $value.description}}
+          <p class="plugin-description">{{$value.description}}</p>
+          {{else}}
+          <p class="plugin-description no-description">暂无描述</p>
+          {{/if}}
+
+          <div class="plugin-meta">
+            {{if $value.author}}
+            <div class="meta-item">
+              <span class="meta-label">👤 作者:</span>
+              <span class="meta-value">{{$value.author}}</span>
+            </div>
+            {{/if}}
+            <div class="meta-item">
+              <span class="meta-label">📁 路径:</span>
+              <span class="meta-value plugin-path">{{$value.dir}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="plugin-footer">
+          <span class="plugin-index">#{{$value.index}}</span>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="footer">
+      <p>{{sys.copyright}}</p>
+    </div>
+  </div>
+</body>
+
+</html>

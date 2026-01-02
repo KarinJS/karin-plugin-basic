@@ -1,6 +1,5 @@
-import { info } from '@/root'
-import { karin, logger } from 'node-karin'
-import { config } from '@/utils/config'
+import { karin } from 'node-karin'
+import { cfg } from '@/config'
 import { getMonthStat, getTodayStat, initStat, MB, uptime } from '@/core'
 
 export const status = karin.command(/^#状态$/, async (e) => {
@@ -25,6 +24,4 @@ export const status = karin.command(/^#状态$/, async (e) => {
   return true
 }, { name: '状态统计' })
 
-if (config().status) initStat()
-
-logger.info(`${logger.violet(`[插件:${info.version}]`)} ${logger.green(info.pkg.name)} 初始化完成~`)
+if (cfg.get().status) initStat()

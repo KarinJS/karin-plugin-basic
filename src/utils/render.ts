@@ -1,8 +1,8 @@
 import path from 'node:path'
 import { segment, karin, config } from 'node-karin'
-import { info } from '@/root'
+import { plugin } from './dir'
 
-const copyright = `${info.name} v${info.version} - Copyright © 2025 KarinJS | Powered by Karin v${config.pkg().version}`
+const copyright = `${plugin.name} ${plugin.pkg.version} - Copyright © 2025 KarinJS | Powered by Karin v${config.pkg().version}`
 /**
  * 渲染
  * @param name 文件名称 不包含`.html`
@@ -13,7 +13,7 @@ export const render = async (
   params: Record<string, any>
 ) => {
   name = name.replace(/.html$/, '')
-  const root = path.join(info.dir, 'resources')
+  const root = path.join(plugin.dir, 'resources')
   const img = await karin.render({
     name: path.basename(name),
     type: 'png',
