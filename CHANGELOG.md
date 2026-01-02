@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/KarinJS/karin-plugin-basic/compare/v1.2.1...v1.3.0) (2026-01-02)
+
+
+### Features
+
+* 新增定时检查本体更新，新增'#日志'功能 close [#18](https://github.com/KarinJS/karin-plugin-basic/issues/18) ([6c20475](https://github.com/KarinJS/karin-plugin-basic/commit/6c204757555b947fe0ab40f0ee977a1c9a992543))
+* 新增自动重启，优化代码逻辑 close [#19](https://github.com/KarinJS/karin-plugin-basic/issues/19) ([16f4888](https://github.com/KarinJS/karin-plugin-basic/commit/16f48882fcb5c52d5cfe05f596035e6e6d904381))
+
+
+### Bug Fixes
+
+* CLI ([2cff541](https://github.com/KarinJS/karin-plugin-basic/commit/2cff5412dc075c180a045161eb5a55bc817f8d71))
+* 标题背景图 ([ba71db1](https://github.com/KarinJS/karin-plugin-basic/commit/ba71db1cc0ae07bf48440855211a129764752462))
+
 ## [1.2.1](https://github.com/KarinJS/karin-plugin-basic/compare/v1.2.0...v1.2.1) (2025-07-04)
 
 
