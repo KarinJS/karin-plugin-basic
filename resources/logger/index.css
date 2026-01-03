@@ -7,8 +7,9 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft YaHei';
   background: linear-gradient(135deg, #c7d2fe 0%, #fbcfe8 50%, #a5f3fc 100%);
-  min-height: 100vh;
   padding: 20px;
+  display: flex;
+  align-items: flex-start;
 }
 
 .container {
