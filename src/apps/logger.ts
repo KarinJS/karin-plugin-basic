@@ -264,7 +264,7 @@ export const logViewer = karin.command(/^#日志\s*(\d+)?$/, async (e) => {
   const match = e.msg.match(/^#日志\s*(\d+)?$/)
   let limit = match && match[1] ? Number(match[1]) : 50
   if (!Number.isFinite(limit) || limit <= 0) limit = 50
-  if (limit > 200) limit = 200
+  if (limit > 1000) limit = 1000
 
   const logs = await getTodayLogs(limit)
   const parsedLogs = logs.map(parseLogLine)

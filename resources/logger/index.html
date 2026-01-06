@@ -11,7 +11,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>📋 Karin 日志</h1>
+      <h1>Karin 日志</h1>
       <div class="info">
         <span class="date">{{date}}</span>
         <span class="count">共 {{total}} 条日志</span>
@@ -21,9 +21,11 @@
     <div class="logs-container">
       {{each logs}}
       <div class="log-item log-{{$value.level}}">
-        <span class="log-time">{{$value.time}}</span>
-        <span class="log-level level-{{$value.level}}">{{$value.level}}</span>
-        <span class="log-message">{{@ $value.messageHtml}}</span>
+        <div class="log-content">
+          <span class="log-prefix">[<span class="log-time">{{$value.time}}</span>][<span
+              class="log-level level-{{$value.level}}">{{$value.level}}</span>]</span>
+          <span class="log-message">{{@ $value.messageHtml}}</span>
+        </div>
       </div>
       {{/each}}
     </div>
