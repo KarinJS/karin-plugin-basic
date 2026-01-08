@@ -3,36 +3,19 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karin 日志</title>
   <link rel="stylesheet" href="{{pluResPath}}logger/index.css">
 </head>
 
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Karin 日志</h1>
-      <div class="info">
-        <span class="date">{{date}}</span>
-        <span class="count">共 {{total}} 条日志</span>
-      </div>
-    </div>
+  <div class="header">
+    <div class="title">Karin 日志</div>
+    <div class="meta">{{date}} | 共 {{total}} 条日志</div>
+  </div>
 
-    <div class="logs-container">
-      {{each logs}}
-      <div class="log-item log-{{$value.level}}">
-        <div class="log-content">
-          <span class="log-prefix">[<span class="log-time">{{$value.time}}</span>][<span
-              class="log-level level-{{$value.level}}">{{$value.level}}</span>]</span>
-          <span class="log-message">{{@ $value.messageHtml}}</span>
-        </div>
-      </div>
-      {{/each}}
-    </div>
+  <div class="logs">{{@ logs.join('\n') }}</div>
 
-    <div class="footer">
-      <p>{{sys.copyright}}</p>
-    </div>
+  <div class="footer">
+    {{sys.copyright}}
   </div>
 </body>
 

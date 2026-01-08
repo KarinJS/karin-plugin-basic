@@ -3,77 +3,98 @@ import path from 'node:path'
 import { karin, logger } from 'node-karin'
 import { render } from '@/utils/render'
 
+// ANSI 相关常量
+const ESC = '\u001b'
+const ANSI_REGEX = new RegExp(`${ESC}\\[([0-9;]+)m`, 'g')
+
+const escapeHtml = (str: string) => str
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+
+const ANSI_COLOR_MAP: Record<number, string> = {
+  30: '#020617',
+  31: '#ef4444',
+  32: '#22c55e',
+  33: '#eab308',
+  34: '#3b82f6',
+  35: '#ec4899',
+  36: '#06b6d4',
+  37: '#e5e7eb',
+  90: '#6b7280',
+  91: '#f97373',
+  92: '#4ade80',
+  93: '#fde047',
+  94: '#60a5fa',
+  95: '#a855f7',
+  96: '#38bdf8',
+  97: '#f9fafb',
+}
+
+// 日志行匹配相关常量
+const LOG_TIME_PREFIX_REGEX = /^\[\d{2}:\d{2}:\d{2}\.\d{3}\]/
+const LOG_HEADER_REGEX = /^(\[\d{2}:\d{2}:\d{2}\.\d{3}\])(\[(?:INFO|WARN|ERROR|ERRO|FATAL|DEBUG|TRACE|MARK)\])/
+
+const LOG_LEVEL_COLOR_CODE: Record<string, string> = {
+  INFO: '\x1b[32m', // 绿色
+  WARN: '\x1b[33m', // 黄色
+  ERROR: '\x1b[31m', // 红色
+  ERRO: '\x1b[31m', // 兼容旧字段
+  FATAL: '\x1b[35m', // 紫色
+  DEBUG: '\x1b[90m', // 灰色
+  TRACE: '\x1b[90m', // 灰色
+  MARK: '\x1b[90m', // 灰色
+}
+
 /**
  * 将 ANSI 颜色码转换为带样式的 HTML 片段
  */
 const ansiToHtml = (text: string): string => {
   if (!text) return ''
 
-  const ESC = '\u001b'
-  const ansiRegex = new RegExp(`${ESC}\\[([0-9;]+)m`, 'g')
-
-  const escapeHtml = (str: string) => str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-
   let result = ''
   let lastIndex = 0
   let openSpan = ''
 
-  const colorMap: Record<number, string> = {
-    30: '#020617',
-    31: '#ef4444',
-    32: '#22c55e',
-    33: '#eab308',
-    34: '#3b82f6',
-    35: '#ec4899',
-    36: '#06b6d4',
-    37: '#e5e7eb',
-    90: '#6b7280',
-    91: '#f97373',
-    92: '#4ade80',
-    93: '#fde047',
-    94: '#60a5fa',
-    95: '#a855f7',
-    96: '#38bdf8',
-    97: '#f9fafb',
-  }
-
-  text.replace(ansiRegex, (match, codesStr, offset) => {
+  text.replace(ANSI_REGEX, (match, codesStr, offset) => {
     const chunk = text.slice(lastIndex, offset)
     if (chunk) {
       result += escapeHtml(chunk)
     }
     lastIndex = offset + match.length
 
-    const codes = codesStr.split(';').map((n: string) => Number(n) || 0)
+    const codes = codesStr.split(';').map((n: string) => parseInt(n, 10))
 
-    // 关闭当前颜色
+    // 每次遇到 ANSI 码，先尝试关闭之前的 span
     if (openSpan) {
       result += '</span>'
       openSpan = ''
     }
 
-    // 重置
-    if (codes.includes(0) || codes.includes(39)) {
-      return ''
-    }
-
     // 24bit 颜色: 38;2;r;g;b
+    // 注意：像 38;2;255;255;0 这样的序列，最后的 0 是颜色分量，不能被当成重置码
     if (codes[0] === 38 && codes[1] === 2 && codes.length >= 5) {
       const r = codes[2]
       const g = codes[3]
       const b = codes[4]
-      openSpan = `color: rgb(${r}, ${g}, ${b})`
-      result += `<span style="${openSpan}">`
+      // 确保是有效颜色值，否则不生成 span
+      if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
+        openSpan = `color: rgb(${r}, ${g}, ${b})`
+        result += `<span style="${openSpan}">`
+      }
+      return ''
+    }
+
+    // 重置 (0) 或 默认前景色 (39)
+    // 仅当它们是唯一的代码时才视为重置，避免误伤 24bit 颜色中的 0 分量
+    if (codes.length === 1 && (codes[0] === 0 || codes[0] === 39)) {
       return ''
     }
 
     // 标准前景色
-    const colorCode = codes.find((c: number) => colorMap[c])
+    const colorCode = codes.find((c: number) => ANSI_COLOR_MAP[c])
     if (colorCode !== undefined) {
-      const color = colorMap[colorCode]
+      const color = ANSI_COLOR_MAP[colorCode]
       openSpan = `color: ${color}`
       result += `<span style="${openSpan}">`
       return ''
@@ -94,54 +115,70 @@ const ansiToHtml = (text: string): string => {
 }
 
 /**
- * 去掉首尾纯空行，保留中间换行与缩进
+ * 给日志等级加上 ANSI 颜色
+ * 规则：[时间] 的颜色跟随 [等级] 的颜色
  */
-const trimEmptyLines = (text: string): string => {
-  const lines = text.split('\n')
-  while (lines.length && !lines[0].trim()) lines.shift()
-  while (lines.length && !lines[lines.length - 1].trim()) lines.pop()
-  return lines.join('\n')
+const colorizeLog = (line: string) => {
+  // 匹配行首的 [时间][等级] 结构
+  // 用户指出日志文件内不包含 [Karin] 前缀，统一以 [时间][等级] 开头
+  return line.replace(LOG_HEADER_REGEX, (match, timePart, levelPart) => {
+    // 提取等级文本，移除 []
+    const levelKey = levelPart.replace('[', '').replace(']', '')
+
+    const colorCode = LOG_LEVEL_COLOR_CODE[levelKey] ?? '\x1b[37m'
+
+    // 将颜色应用于 [时间][等级] 整体，并在之后立即重置
+    return `${colorCode}${timePart}${levelPart}\x1b[0m`
+  })
 }
 
 /**
- * 按一条完整日志分组（支持多行错误堆栈）
- * 规则：以 [时间][等级] 开头视为一条新日志的开始
+ * 按日志条目分组
+ * 确保多行错误堆栈属于同一个日志条目
  */
 const groupLogLines = (lines: string[]): string[] => {
   const groups: string[][] = []
   let current: string[] = []
 
-  const isNewEntry = (line: string) => {
-    const trimmed = line.trim()
-    if (!trimmed) return false
-    // 日志格式示例: [10:26:02.132][INFO] ...
-    return /^\[\d{2}:\d{2}:\d{2}\.\d{3}\]\[[A-Z]+]/.test(trimmed)
-  }
+  // 匹配 [HH:mm:ss.ms] 开头，视为新日志
+  const isNewEntry = (line: string) => LOG_TIME_PREFIX_REGEX.test(line)
 
   for (const line of lines) {
+    if (!line.trim()) continue
+
     if (isNewEntry(line)) {
       if (current.length) groups.push(current)
       current = [line]
     } else {
-      // 堆栈或附加信息，追加到当前日志
       if (current.length) {
         current.push(line)
       } else {
-        // 如果文件开头就是非标准行，单独作为一条
         current = [line]
       }
     }
   }
-
   if (current.length) groups.push(current)
 
-  return groups.map(item => item.join('\n'))
+  return groups.map(g => g.join('\n'))
 }
 
 /**
- * 读取当天日志的最后 N 条（默认 50 条）
+ * 读取并分组日志文件，返回按时间排序的最后 N 条
  */
-const getTodayLogs = async (limit = 50): Promise<string[]> => {
+const readAndGroupLogFile = (logFile: string, limit: number): string[] => {
+  const content = fs.readFileSync(logFile, 'utf-8')
+  const lines = content.split('\n')
+  const groups = groupLogLines(lines)
+  // 默认按时间正序渲染（旧 -> 新），即从上到下
+  // 如果希望最新的日志显示在最上方，可以改为：
+  // return groups.slice(-limit).reverse()
+  return groups.slice(-limit)
+}
+
+/**
+ * 读取当天日志的最后 N 条（默认 100 条）
+ */
+const getTodayLogs = async (limit = 100): Promise<string[]> => {
   const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
   const logDir = path.join(process.cwd(), '@karinjs', 'logs')
   const logFile = path.join(logDir, `logger.${today}.log`)
@@ -160,19 +197,10 @@ const getTodayLogs = async (limit = 50): Promise<string[]> => {
       }
 
       const latestLog = path.join(logDir, files[0])
-      const content = fs.readFileSync(latestLog, 'utf-8')
-      const lines = content.split('\n').filter(line => line.trim())
-      const groups = groupLogLines(lines)
-      // 获取最后 limit 条日志（按条，不是按行），并反转顺序（最新的在最上面）
-      return groups.slice(-limit).reverse()
+      return readAndGroupLogFile(latestLog, limit)
     }
 
-    const content = fs.readFileSync(logFile, 'utf-8')
-    const lines = content.split('\n').filter(line => line.trim())
-
-    const groups = groupLogLines(lines)
-    // 获取最后 limit 条，并反转顺序（最新的在最上面）
-    return groups.slice(-limit).reverse()
+    return readAndGroupLogFile(logFile, limit)
   } catch (error) {
     logger.error('读取日志文件失败:', error)
     return ['读取日志失败']
@@ -180,10 +208,10 @@ const getTodayLogs = async (limit = 50): Promise<string[]> => {
 }
 
 /**
- * 读取错误日志的最后 N 条（默认 50 条）
+ * 读取错误日志的最后 N 条（默认 100 条）
  * 仅使用 @karinjs/logs/error 目录，旧的 logs 根目录 logger.error.* 已废弃
  */
-const getErrorLogs = async (limit = 50): Promise<string[]> => {
+const getErrorLogs = async (limit = 100): Promise<string[]> => {
   const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
   const errorDir = path.join(process.cwd(), '@karinjs', 'logs', 'error')
 
@@ -213,50 +241,10 @@ const getErrorLogs = async (limit = 50): Promise<string[]> => {
 
     if (!logFile) return []
 
-    const content = fs.readFileSync(logFile, 'utf-8')
-    const lines = content.split('\n').filter(line => line.trim())
-    const groups = groupLogLines(lines)
-    return groups.slice(-limit).reverse()
+    return readAndGroupLogFile(logFile, limit)
   } catch (error) {
     logger.error('读取错误日志文件失败:', error)
     return []
-  }
-}
-
-/**
- * 解析日志行，提取时间、级别、来源和消息
- */
-const parseLogLine = (line: string) => {
-  // 支持多行日志：第一行是头，后面是堆栈
-  const [firstLine, ...rest] = line.split('\n')
-
-  // 日志格式示例: [10:26:02.132][INFO]  消息...
-  let time = ''
-  let levelRaw = 'INFO'
-
-  const timeMatch = firstLine.match(/^\[(\d{2}:\d{2}:\d{2}\.\d{3})]/)
-  const levelMatch = firstLine.match(/\[([A-Z]+)]/)
-  if (timeMatch) time = timeMatch[1]
-  if (levelMatch) levelRaw = levelMatch[1]
-
-  const levelKey = levelRaw.toLowerCase()
-  const level = levelKey === 'erro' ? 'error' : levelKey
-
-  const messageHead = firstLine.replace(/^\[\d{2}:\d{2}:\d{2}\.\d{3}]\[[A-Z]+]\s*/, '')
-
-  const messageTail = rest.length ? '\n' + rest.join('\n') : ''
-
-  // 先拼接，再去掉首尾空行，避免最上面多出一行空白
-  const fullMessage = trimEmptyLines(`${messageHead}${messageTail}`)
-  // 去掉 ANSI 码得到纯文本
-  // eslint-disable-next-line no-control-regex
-  const plainMessage = fullMessage.replace(/\u001b\[[0-9;]+m/g, '')
-
-  return {
-    time,
-    level,
-    message: plainMessage,
-    messageHtml: ansiToHtml(fullMessage)
   }
 }
 
@@ -267,12 +255,12 @@ export const logViewer = karin.command(/^#日志\s*(\d+)?$/, async (e) => {
   if (limit > 1000) limit = 1000
 
   const logs = await getTodayLogs(limit)
-  const parsedLogs = logs.map(parseLogLine)
+  const logsHtml = logs.map(line => ansiToHtml(colorizeLog(line)))
 
   try {
     const img = await render('logger/index', {
-      logs: parsedLogs,
-      total: parsedLogs.length,
+      logs: logsHtml,
+      total: logs.length,
       date: new Date().toLocaleString('zh-CN')
     })
 
@@ -298,12 +286,12 @@ export const errorLogViewer = karin.command(/^#错误日志\s*(\d+)?$/, async (e
     return true
   }
 
-  const parsedLogs = logs.map(parseLogLine)
+  const logsHtml = logs.map(line => ansiToHtml(colorizeLog(line)))
 
   try {
     const img = await render('logger/index', {
-      logs: parsedLogs,
-      total: parsedLogs.length,
+      logs: logsHtml,
+      total: logs.length,
       date: new Date().toLocaleString('zh-CN')
     })
 
