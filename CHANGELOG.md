@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.3](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.2...v1.3.3) (2026-01-06)
+
+
+### Bug Fixes
+
+* 优化日志样式 ([fca7201](https://github.com/KarinJS/karin-plugin-basic/commit/fca72017a0d51315e868d5b86100f603df1d4c1a))
+* 优化样式 ([1cd06ba](https://github.com/KarinJS/karin-plugin-basic/commit/1cd06ba2e64d53683c901a864815a6163703949b))
+
 ## [1.3.2](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.1...v1.3.2) (2026-01-03)
 
 
