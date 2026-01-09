@@ -47,6 +47,56 @@ const LOG_LEVEL_COLOR_CODE: Record<string, string> = {
 }
 
 /**
+ * 将 ANSI 256 色索引转换为 RGB 字符串
+ * 兼容 xterm 256 色标准：
+ * - 0-15: 基本/高亮颜色
+ * - 16-231: 6x6x6 色彩立方体
+ * - 232-255: 灰度
+ */
+const ansi256ToRgb = (idx: number): string | null => {
+  if (idx < 0 || idx > 255 || Number.isNaN(idx)) return null
+
+  // 0-15 映射到基础前景色，尽量与 ANSI_COLOR_MAP 保持接近
+  const basicPalette: string[] = [
+    '#020617', // 0: black
+    '#ef4444', // 1: red
+    '#22c55e', // 2: green
+    '#eab308', // 3: yellow
+    '#3b82f6', // 4: blue
+    '#ec4899', // 5: magenta
+    '#06b6d4', // 6: cyan
+    '#e5e7eb', // 7: white (light gray)
+    '#6b7280', // 8: bright black (gray)
+    '#f97373', // 9: bright red
+    '#4ade80', // 10: bright green
+    '#fde047', // 11: bright yellow
+    '#60a5fa', // 12: bright blue
+    '#a855f7', // 13: bright magenta
+    '#38bdf8', // 14: bright cyan
+    '#f9fafb', // 15: bright white
+  ]
+
+  if (idx <= 15) {
+    return basicPalette[idx]
+  }
+
+  // 16-231: 6x6x6 色彩立方体
+  if (idx >= 16 && idx <= 231) {
+    const n = idx - 16
+    const r = Math.floor(n / 36)
+    const g = Math.floor((n % 36) / 6)
+    const b = n % 6
+
+    const conv = (c: number) => (c === 0 ? 0 : 55 + c * 40)
+    return `rgb(${conv(r)}, ${conv(g)}, ${conv(b)})`
+  }
+
+  // 232-255: 灰度
+  const gray = 8 + (idx - 232) * 10
+  return `rgb(${gray}, ${gray}, ${gray})`
+}
+
+/**
  * 将 ANSI 颜色码转换为带样式的 HTML 片段
  */
 const ansiToHtml = (text: string): string => {
@@ -80,6 +130,17 @@ const ansiToHtml = (text: string): string => {
       // 确保是有效颜色值，否则不生成 span
       if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
         openSpan = `color: rgb(${r}, ${g}, ${b})`
+        result += `<span style="${openSpan}">`
+      }
+      return ''
+    }
+
+    // 256 色: 38;5;n
+    if (codes[0] === 38 && codes[1] === 5 && codes.length >= 3) {
+      const idx = codes[2]
+      const rgb = ansi256ToRgb(idx)
+      if (rgb) {
+        openSpan = `color: ${rgb}`
         result += `<span style="${openSpan}">`
       }
       return ''
