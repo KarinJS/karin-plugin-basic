@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.4...v1.3.5) (2026-01-09)
+
+
+### Bug Fixes
+
+* 修复 ANSI 256 渲染失败的问题 ([f99c1ca](https://github.com/KarinJS/karin-plugin-basic/commit/f99c1caaf3b2a4355431ca9012bd24a050ad2f69))
+
 ## [1.3.4](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.3...v1.3.4) (2026-01-08)
 
 
