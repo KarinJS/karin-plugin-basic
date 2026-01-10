@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.6](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.5...v1.3.6) (2026-01-10)
+
+
+### Bug Fixes
+
+* 修复debug日志等级颜色渲染错误的问题 ([c8cab82](https://github.com/KarinJS/karin-plugin-basic/commit/c8cab829db1d28537b7b30cd18066d90083d0496))
+
 ## [1.3.5](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.4...v1.3.5) (2026-01-09)
 
 
