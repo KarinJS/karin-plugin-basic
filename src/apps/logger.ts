@@ -33,7 +33,7 @@ const ANSI_COLOR_MAP: Record<number, string> = {
 
 // 日志行匹配相关常量
 const LOG_TIME_PREFIX_REGEX = /^\[\d{2}:\d{2}:\d{2}\.\d{3}\]/
-const LOG_HEADER_REGEX = /^(\[\d{2}:\d{2}:\d{2}\.\d{3}\])(\[(?:INFO|WARN|ERROR|ERRO|FATAL|DEBUG|TRACE|MARK)\])/
+const LOG_HEADER_REGEX = /^(\[\d{2}:\d{2}:\d{2}\.\d{3}\])(\[(?:INFO|WARN|ERROR|ERRO|FATAL|DEBUG|DEBU|TRACE|MARK)\])/
 
 const LOG_LEVEL_COLOR_CODE: Record<string, string> = {
   INFO: '\x1b[32m', // 绿色
@@ -41,7 +41,8 @@ const LOG_LEVEL_COLOR_CODE: Record<string, string> = {
   ERROR: '\x1b[31m', // 红色
   ERRO: '\x1b[31m', // 兼容旧字段
   FATAL: '\x1b[35m', // 紫色
-  DEBUG: '\x1b[90m', // 灰色
+  DEBUG: '\x1b[94m', // 淡蓝色
+  DEBU: '\x1b[94m', // 淡蓝色（部分日志中使用 [DEBU] 缩写）
   TRACE: '\x1b[90m', // 灰色
   MARK: '\x1b[90m', // 灰色
 }
