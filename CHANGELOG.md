@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.6...v1.4.0) (2026-01-11)
+
+
+### Features
+
+* 添加更新日志等级的命令 ([0dfbab3](https://github.com/KarinJS/karin-plugin-basic/commit/0dfbab3392e7f51d06dcfa61a73ed7dd55e4474e))
+
 ## [1.3.6](https://github.com/KarinJS/karin-plugin-basic/compare/v1.3.5...v1.3.6) (2026-01-10)
 
 
