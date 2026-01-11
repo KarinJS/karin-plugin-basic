@@ -365,3 +365,14 @@ export const errorLogViewer = karin.command(/^#错误日志\s*(\d+)?$/, async (e
     return false
   }
 }, { name: '错误日志查看器', perm: 'admin' })
+
+export const updateLogger = karin.command(/^#日志等级\s*('trace'|'debug'|'info'|'warn'|'error'|'fatal')$/i, async (e) => {
+  const match = e.msg.match(/^#日志等级\s*('trace'|'debug'|'info'|'warn'|'error'|'fatal')$/i)?.[1].toLowerCase()
+  if (!match) {
+    await e.reply('无效的日志等级')
+    return false
+  }
+  logger.level = match
+  await e.reply(`已将日志等级更新为 ${match.toUpperCase()}`)
+  return true
+}, { name: '更新日志等级', perm: 'admin' })
