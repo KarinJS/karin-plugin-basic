@@ -144,6 +144,7 @@ export const plugins = karin.command(/^#插件列表$/, async (e) => {
 
 /** 更新插件 */
 export const updatePlugin = karin.command(/^#(全部)?(强制)?更新(.*)?$/, async (e) => {
+  if (!e.isMaster) return false
   const [, all, force, name = 'node-karin'] = e.msg.match(/^#(全部)?(强制)?更新(.*)?$/)!
   const cmd = force ? 'git reset --hard && git pull --allow-unrelated-histories' : 'git pull'
   if (all) {
@@ -183,7 +184,7 @@ export const updatePlugin = karin.command(/^#(全部)?(强制)?更新(.*)?$/, as
     }
     return await e.reply(`\n更新成功\n${res.data}`, { at: true })
   }
-}, { name: '更新插件', perm: 'admin', priority: 100 })
+}, { name: '更新插件', priority: 100 })
 /** 检查更新 */
 export const check = karin.command(/^#检查更新/, async (e) => {
   let name = e.msg.replace(/^#检查更新/, '').trim()
