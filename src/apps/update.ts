@@ -164,7 +164,10 @@ export const updatePlugin = karin.command(/^#(全部)?(强制)?更新(.*)?$/, as
     let res
     if (name !== 'node-karin') {
       const info = getPluginInfo(name.trim())
-      if (!info) return await e.reply('插件未安装~', { reply: true })
+      if (!info) {
+        await e.reply('插件未安装~', { reply: true })
+        return false
+      }
       if (info.type === 'app') return await e.reply('应用插件不支持更新~', { reply: true })
       res = info.type === 'git'
         ? await updateGitPlugin(info.dir, cmd, 120)
@@ -180,7 +183,7 @@ export const updatePlugin = karin.command(/^#(全部)?(强制)?更新(.*)?$/, as
     }
     return await e.reply(`\n更新成功\n${res.data}`, { at: true })
   }
-})
+}, { name: '更新插件', perm: 'admin', priority: 100 })
 /** 检查更新 */
 export const check = karin.command(/^#检查更新/, async (e) => {
   let name = e.msg.replace(/^#检查更新/, '').trim()
