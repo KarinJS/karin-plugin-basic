@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/plugin-basic",
-  "version": "1.3.6",
+  "version": "1.4.1",
   "description": "Karin的基础插件,提供最基础的功能",
   "homepage": "https://github.com/KarinJS/karin-plugin-basic",
   "bugs": {
