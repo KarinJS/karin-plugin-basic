@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.1...v1.4.2) (2026-01-17)
+
+
+### Bug Fixes
+
+* 权限判断 ([76282db](https://github.com/KarinJS/karin-plugin-basic/commit/76282db2688b2a67bbc99ec59e3a4c6e96c9b3f7))
+* 细节优化 ([f94a232](https://github.com/KarinJS/karin-plugin-basic/commit/f94a2322c82f7a241d14f38e05f8eae30eb384d2))
+
 ## [1.4.1](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.0...v1.4.1) (2026-01-11)
 
 
