@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.3...v1.4.4) (2026-02-15)
+
+
+### Bug Fixes
+
+* 修改定时重启为cron表达式 ([58d8c74](https://github.com/KarinJS/karin-plugin-basic/commit/58d8c7410bae057b70403576fd02508347a6389e))
+
 ## [1.4.3](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.2...v1.4.3) (2026-02-15)
 
 
