@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.2...v1.4.3) (2026-02-15)
+
+
+### Bug Fixes
+
+* 修复web无法正确保存配置的问题 ([978562b](https://github.com/KarinJS/karin-plugin-basic/commit/978562b888a85799bbbb92f5fb2d62020199dda1))
+
 ## [1.4.2](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.1...v1.4.2) (2026-01-17)
 
 
