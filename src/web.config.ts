@@ -58,14 +58,19 @@ export default defineConfig({
         description: '是否启用自动更新',
         defaultSelected: config.autoupdate,
       }),
-      components.input.number('autorestart', {
+      components.input.string('restartTask', {
         color: 'success',
-        label: '自动重启延迟时间',
-        description: '自动重启延迟时间，单位秒，0表示不自动重启',
-        defaultValue: config.autorestart + '',
+        label: '定时重启',
+        description: '使用cron表达式设置定时重启Karin，0表示不自动重启',
+        defaultValue: config.restartTask + '',
+        rules: [
+          {
+            regex: /^(0|(\S+\s){4}\S+)$/,
+            error: '请输入0或有效的cron表达式'
+          }
+        ]
       })
     ]
-
     return list
   },
 

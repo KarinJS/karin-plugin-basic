@@ -22,7 +22,7 @@ class Config {
     restart: true,
     domain: '',
     autoupdate: false,
-    autorestart: 0,
+    restartTask: 0,
   }
 
   constructor () {
