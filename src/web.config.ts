@@ -6,7 +6,7 @@ import { plugin } from '@/utils'
 
 export default defineConfig({
   info: {
-    id: plugin.name,
+    id: plugin.pkg.name,
     name: '基础插件',
     version: plugin.version,
     description: plugin.pkg.description,
