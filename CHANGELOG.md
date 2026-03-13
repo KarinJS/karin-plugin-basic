@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.4...v1.4.5) (2026-03-04)
+
+
+### Bug Fixes
+
+* 定时重启增加日志提示 ([ca6e89c](https://github.com/KarinJS/karin-plugin-basic/commit/ca6e89c53574b19d5357e7808bc5204ee7a329ba))
+
 ## [1.4.4](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.3...v1.4.4) (2026-02-15)
 
 
