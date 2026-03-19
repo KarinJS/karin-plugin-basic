@@ -12,6 +12,6 @@ export interface Config {
   domain: string
   /** 是否自动更新 */
   autoupdate: boolean
-  /** 定时重启，0表示不定时重启 */
-  restartTask: number | string
+  /** 定时重启 */
+  restartTask: string | number
 }

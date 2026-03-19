@@ -61,7 +61,7 @@ export default defineConfig({
       components.input.string('restartTask', {
         color: 'success',
         label: '定时重启',
-        description: '使用cron表达式设置定时重启Karin，0表示不自动重启',
+        description: '使用cron表达式设置定时重启Karin,0表示不自动重启',
         defaultValue: config.restartTask + '',
         rules: [
           {
