@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.6](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.5...v1.4.6) (2026-03-19)
+
+
+### Bug Fixes
+
+* 修复定时重启设置为0时，异常输出Cron表达式错误 ([8be7f66](https://github.com/KarinJS/karin-plugin-basic/commit/8be7f662f75c454505fefb1d49a323b85e044628))
+
 ## [1.4.5](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.4...v1.4.5) (2026-03-04)
 
 
