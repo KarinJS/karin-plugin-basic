@@ -340,10 +340,10 @@ export const TaskUpdate = karin.task('Karin-定时更新检查', '*/10 * * * *',
 
     await sendToFirstAdmin(selfId, [
       segment.text(
-        `检测到插件 [node-karin] 有新版本~\n已自动更新 (v${up.local} → v${up.remote})，即将重启以应用更新`
+        `检测到 [node-karin] 有新版本~\n已自动更新 (v${up.local} → v${up.remote})，即将重启以应用更新`
       ),
     ])
-    await restartDirect({ isPm2: false, reloadDeps: true })
+    if (config.restart) await restartDirect({ isPm2: false, reloadDeps: true })
     return true
   }
 
