@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.7](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.6...v1.4.7) (2026-03-31)
+
+
+### Bug Fixes
+
+* 修复更新完成不重启配置项失效的问题 ([aa7009c](https://github.com/KarinJS/karin-plugin-basic/commit/aa7009c2cdd8e03619a55cca1be090850d46fbf4))
+
 ## [1.4.6](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.5...v1.4.6) (2026-03-19)
 
 
