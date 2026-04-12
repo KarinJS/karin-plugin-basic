@@ -13,6 +13,11 @@ export const Master = karin.command(/^#设置主人$/, async (e) => {
   await e.reply('\n请输入控制台验证码', { at: true })
   const event = await karin.ctx(e)
 
+  if (event === null) {
+    await e.reply('等待超时，已取消', { at: true })
+    return true
+  }
+
   if (sign !== event.msg.trim()) {
     await e.reply('验证码错误', { at: true })
     return true

@@ -30,14 +30,14 @@
     "karin": "karin"
   },
   "devDependencies": {
-    "@karinjs/plugin-puppeteer": "^1.1.2",
-    "@types/node": "^25.2.3",
-    "eslint": "^9.39.2",
-    "neostandard": "^0.12.2",
-    "node-karin": "^1.14.3",
-    "tsup": "^8.5.1",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "@karinjs/plugin-puppeteer": "1.1.2",
+    "@types/node": "22.19.17",
+    "eslint": "9.39.2",
+    "neostandard": "0.12.2",
+    "node-karin": "1.15.3",
+    "tsup": "8.5.1",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
   },
   "publishConfig": {
     "access": "public",
