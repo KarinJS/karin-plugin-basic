@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@karinjs/plugin-puppeteer": "1.1.2",
-    "@types/node": "22.19.17",
+    "@types/node": "24.12.2",
     "eslint": "9.39.2",
     "neostandard": "0.12.2",
     "node-karin": "1.15.3",

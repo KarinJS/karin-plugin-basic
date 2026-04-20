@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           # 设置 Node.js 版本
-          node-version: 22
+          node-version: 24
           # 设置 npm 源
           registry-url: "https://registry.npmjs.org"
       - name: 更新npm到最新版本

@@ -165,10 +165,8 @@ export const updatePlugin = karin.command(/^#(全部)?(强制)?更新(.*)?$/, as
     let res
     if (name !== 'node-karin') {
       const info = getPluginInfo(name.trim())
-      if (!info) {
-        await e.reply('插件未安装~', { reply: true })
-        return false
-      }
+      if (!info) return false
+
       if (info.type === 'app') return await e.reply('应用插件不支持更新~', { reply: true })
       res = info.type === 'git'
         ? await updateGitPlugin(info.dir, cmd, 120)
