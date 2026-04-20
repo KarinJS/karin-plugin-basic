@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.9](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.8...v1.4.9) (2026-04-20)
+
+
+### Bug Fixes
+
+* 触发#更新时，未匹配到插件不在输出提示 ([673043d](https://github.com/KarinJS/karin-plugin-basic/commit/673043d7c1dd8413c7f5c138c653e1e18000f82a))
+
 ## [1.4.8](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.7...v1.4.8) (2026-04-12)
 
 
