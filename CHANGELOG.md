@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.10](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.9...v1.4.10) (2026-05-15)
+
+
+### Bug Fixes
+
+* 修复设置主人成功后没有清理验证码的问题 ([ff69dc2](https://github.com/KarinJS/karin-plugin-basic/commit/ff69dc21ede43206ee58b2d84bc1d2e9ce35743c))
+
 ## [1.4.9](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.8...v1.4.9) (2026-04-20)
 
 
