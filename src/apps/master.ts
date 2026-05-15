@@ -10,6 +10,7 @@ export const Master = karin.command(/^#设置主人$/, async (e) => {
   const sign = crypto.randomUUID()
   logger.mark(`设置主人验证码：${logger.green(sign)}`)
   CAPTCHA.set(e.userId, sign)
+  try {
   await e.reply('\n请输入控制台验证码', { at: true })
   const event = await karin.ctx(e)
 
@@ -30,6 +31,7 @@ export const Master = karin.command(/^#设置主人$/, async (e) => {
 
   await e.reply('\n设置主人成功', { at: true })
   return true
+  } finally { CAPTCHA.delete(e.userId) }
 }, { name: '设置主人', priority: -1 })
 
 export const addMaster = karin.command(/^#新增主人/, async (e) => {
@@ -83,8 +85,8 @@ export const listMaster = karin.command(/^#主人列表$/, async (e) => {
 export const setMasterCaptcha = karin.command(/^#设置主人验证码$/, async (e) => {
   const msg: SendMessage = []
   CAPTCHA.forEach((v, k) => {
-    msg.push(segment.text(`- 用户: ${k} 验证码: ${v}`))
+    msg.push(segment.text(`\n- ${k} 验证码: ${v}`))
   })
   if (msg.length === 0) return e.reply('暂无验证码', { reply: true })
-  await e.reply(['主人验证码列表:\n', ...msg], { reply: true })
+  await e.reply(['主人验证码列表:', ...msg], { reply: true })
 }, { name: '设置主人验证码', priority: -1, permission: 'master' })
