@@ -8,10 +8,10 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ],
     },
     "types": [
