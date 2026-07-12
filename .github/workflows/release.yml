@@ -35,7 +35,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         run: npm install -g npm@latest
       # 安装依赖 不安装对等依赖
-      - run: npm install --config.auto-install-peers=false --ignore-scripts --omit=peer
+      - run: npm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.RELEASE }}
         if: ${{ steps.release.outputs.release_created }}
