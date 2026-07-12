@@ -23,6 +23,7 @@ class Config {
     domain: '',
     autoupdate: false,
     restartTask: 0,
+    updatepush: true
   }
 
   constructor () {

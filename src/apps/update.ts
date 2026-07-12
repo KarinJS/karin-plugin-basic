@@ -319,6 +319,7 @@ const parseLog = (pkg: string, local: string, count: number | string) => {
 
 export const TaskUpdate = karin.task('Karin-定时更新检查', '*/10 * * * *', async () => {
   if (process.env.NODE_ENV === 'development') return true
+  if (!cfg.get().updatepush) return true
 
   const res = await checkPkgUpdate('node-karin')
   if (res.status !== 'yes') return true

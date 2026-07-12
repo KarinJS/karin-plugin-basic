@@ -69,7 +69,13 @@ export default defineConfig({
             error: '请输入0或有效的cron表达式'
           }
         ]
-      })
+      }),
+      components.switch.create('updatepush', {
+        color: 'success',
+        label: '更新推送',
+        description: '启用后将定时监听Karin更新并进行推送',
+        defaultSelected: config.updatepush,
+      }),
     ]
     return list
   },

@@ -14,4 +14,6 @@ export interface Config {
   autoupdate: boolean
   /** 定时重启 */
   restartTask: string | number
+  /** 更新推送 */
+  updatepush: boolean
 }

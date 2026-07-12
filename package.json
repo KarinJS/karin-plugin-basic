@@ -34,7 +34,7 @@
     "@types/node": "24.12.2",
     "eslint": "9.39.2",
     "neostandard": "0.12.2",
-    "node-karin": "1.15.3",
+    "node-karin": "1.16.2",
     "tsup": "8.5.1",
     "tsx": "4.21.0",
     "typescript": "5.9.3"

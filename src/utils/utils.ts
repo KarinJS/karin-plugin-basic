@@ -7,14 +7,14 @@ import karin, { config, logger } from 'node-karin'
  */
 export const sendToFirstAdmin = async (selfId: string, message: Parameters<typeof karin.sendMsg>[2]) => {
   const list = config.master()
-  let master = list[0]
-  if (master === 'console') {
-    master = list[1]
-  }
+  const bot = karin.getBot(selfId)
+  if (!bot) return false
+  const f = await bot.getFriendList(true)
+  const master = f.find(item => list.includes(item.userId))?.userId
   try {
     if (!master) return false
-    const a = await karin.sendMaster(selfId, master, message)
-    return a.messageId
+    const send = await karin.sendMaster(selfId, master, message)
+    return send.messageId
   } catch (error) {
     logger.bot('info', selfId, `[${master}] 发送主动消息失败:`)
     logger.error(error)
