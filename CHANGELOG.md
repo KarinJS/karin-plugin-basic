@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.12](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.11...v1.4.12) (2026-07-12)
+
+
+### Bug Fixes
+
+* 优化更新推送逻辑并更新依赖项 ([0a243c6](https://github.com/KarinJS/karin-plugin-basic/commit/0a243c61c0537733399ba4e9b84c3d47da5d26c0))
+
 ## [1.4.11](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.10...v1.4.11) (2026-05-19)
 
 
