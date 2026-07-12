@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.13](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.12...v1.4.13) (2026-07-12)
+
+
+### Bug Fixes
+
+* cli ([e1d7d48](https://github.com/KarinJS/karin-plugin-basic/commit/e1d7d4854661c6cfc188220b5e29626c2373bd27))
+
 ## [1.4.12](https://github.com/KarinJS/karin-plugin-basic/compare/v1.4.11...v1.4.12) (2026-07-12)
 
 
