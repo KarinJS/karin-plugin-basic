@@ -5,7 +5,7 @@ import os from 'node:os'
 
 const url = { IPv4: ['https://4.ipw.cn'], IPv6: ['https://6.ipw.cn'] }
 
-export const login = karin.command(/#?(面板|web)登录$/i, async (e) => {
+export const login = karin.command(/^#?(面板|web)登录$/i, async (e) => {
   const net = os.networkInterfaces()
   const config = cfg.get()
   const IP: { lan: { ipv4: null | string, ipv6: null | string }, net: { ipv4: null | string, ipv6: null | string } } =
